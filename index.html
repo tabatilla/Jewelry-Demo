@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <button onclick="canvasManager.crearCanvas(24, 12);">24x12</button>
+      <button onclick="canvasManager.crearCanvas(32, 16);">32x16</button>
+    </div>
+
+    <div>
+      <button onclick="canvasManager.agregarEspacio(2, 2);">2x2</button>
+      <button onclick="canvasManager.agregarEspacio(4, 4);">4x4</button>
+      <button onclick="canvasManager.agregarEspacio(5, 8);">5x8</button>
+      <button onclick="canvasManager.agregarEspacio(6, 10);">6x10</button>
+      <button onclick="canvasManager.agregarEspacio(8, 3);">8x3</button>
+      <input type="number" placeholder="ancho" id="ancho" />
+      <input type="number" placeholder="alto" id="alto" />
+      <button onclick="canvasManager.crearEspacio();">Crear</button>
+    </div>
+
+    <div id="canvas"></div>
+  </body>
+  <script>
+    /************/
+    const PIXEL_SIZE = 24;
+    const _closeSize = PIXEL_SIZE * 0.3;
+
+    //Todas las celdas son cuadradas
+    var Celda = (function() {
+      function Celda(x, y, w, h, color) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.color = color;
+      }
+
+      Celda.prototype.click = function(hitpos) {
+        if (
+          hitpos.x > this.x * PIXEL_SIZE &&
+          hitpos.x < this.x * PIXEL_SIZE + this.w * PIXEL_SIZE &&
+          hitpos.y > this.y * PIXEL_SIZE &&
+          hitpos.y < this.y * PIXEL_SIZE + this.h * PIXEL_SIZE
+        ) {
+          return true;
+        }
+        return false;
+      };
+
+      Celda.prototype.clickCloser = function(hitpos) {
+        if (
+          hitpos.x > this.x * PIXEL_SIZE + this.w * PIXEL_SIZE - _closeSize &&
+          hitpos.x < this.x * PIXEL_SIZE + this.w * PIXEL_SIZE &&
+          hitpos.y > this.y * PIXEL_SIZE &&
+          hitpos.y < this.y * PIXEL_SIZE + _closeSize
+        ) {
+          return true;
+        }
+        return false;
+      };
+
+      Celda.prototype.overlap = function(celda) {
+        var lt = { x: celda.x * PIXEL_SIZE, y: celda.y * PIXEL_SIZE },
+          lb = {
+            x: celda.x * PIXEL_SIZE,
+            y: celda.y * PIXEL_SIZE + celda.h * PIXEL_SIZE
+          },
+          rt = {
+            x: celda.x * PIXEL_SIZE + celda.w * PIXEL_SIZE,
+            y: celda.y * PIXEL_SIZE
+          },
+          rb = {
+            x: celda.x * PIXEL_SIZE + celda.w * PIXEL_SIZE,
+            y: celda.y * PIXEL_SIZE + celda.h * PIXEL_SIZE
+          };
+
+        if (
+          this.click(lt) ||
+          this.click(lb) ||
+          this.click(rt) ||
+          this.click(rb)
+        ) {
+          return true;
+        }
+
+        return false;
+      };
+
+      return Celda;
+    })();
+
+    var canvasManager = (function() {
+      let _ancho = 0,
+        _alto = 0;
+      var tablero = [],
+        espacios = [];
+      var isDragging = false,
+        indexActual,
+        celdaActual,
+        celdaBackup,
+        isClosing,
+        indexClose;
+
+      function crearGrilla() {
+        for (let i = 0; i < _ancho; i++) {
+          for (let j = 0; j < _alto; j++) {
+            tablero.push(
+              new Celda(
+                i * PIXEL_SIZE,
+                j * PIXEL_SIZE,
+                PIXEL_SIZE,
+                PIXEL_SIZE,
+                "#ffffff"
+              )
+            );
+          }
+        }
+      }
+
+      function putOnTop(index) {
+        espacios.splice(index, 1);
+        espacios.push(celdaActual);
+      }
+
+      function clearEspacio(index) {
+        if (index != null) {
+          if (confirm("¿Eliminar?")) {
+            espacios.splice(index, 1);
+          }
+        }
+
+        isClosing = false;
+      }
+
+      function getColor() {
+        // var colors = ["#e17d60", "#85dcba", "#e8a87c", "#c38d9e", "#41b4a4"];
+        // return colors[Math.floor(Math.random() * colors.length)];
+
+        return color(193, 193, 193, 99);
+      }
+
+      return {
+        crearEspacio: function() {
+          var w = document.getElementById("ancho").value;
+          var h = document.getElementById("alto").value;
+
+          if (!w || !h) {
+            alert("Ingrese valores");
+            return;
+          }
+
+          espacios.push(new Celda(0, 0, w, h, "#753742"));
+        },
+
+        crearCanvas: function(w, h) {
+          _ancho = w;
+          _alto = h;
+          crearGrilla();
+
+          resizeCanvas(_ancho * PIXEL_SIZE + 1, _alto * PIXEL_SIZE + 1);
+        },
+
+        getTablero: function() {
+          return tablero;
+        },
+
+        getEspacios: function() {
+          return espacios;
+        },
+
+        clickEspacio: function() {
+          var m = createVector(mouseX, mouseY);
+
+          espacios.forEach(function(r, i) {
+            if (r.click(m)) {
+              if (r.clickCloser(m)) {
+                isClosing = true;
+                indexClose = i;
+              }
+
+              clickOffset = p5.Vector.sub(
+                createVector(r.x * PIXEL_SIZE, r.y * PIXEL_SIZE),
+                m
+              );
+              isDragging = true;
+              celdaActual = r;
+              indexActual = i;
+
+              celdaBackup = { ...r };
+            }
+          });
+
+          if (isClosing && indexActual == indexClose) {
+            isDragging = false;
+            clearEspacio(indexActual);
+            return;
+          }
+
+          if (isDragging) {
+            putOnTop(indexActual);
+          }
+        },
+
+        dragEspacio: function() {
+          var m = createVector(mouseX, mouseY);
+
+          if (isDragging) {
+            var vec = createVector(
+              celdaActual.x * PIXEL_SIZE,
+              celdaActual.y * PIXEL_SIZE
+            );
+            vec.set(m).add(clickOffset);
+
+            celdaActual.x = parseInt(vec.x / PIXEL_SIZE);
+            celdaActual.y = parseInt(vec.y / PIXEL_SIZE);
+          }
+        },
+
+        dragEnd: function() {
+          //Si la celda actual no interfiere con las demás celdas entonces conserva su posición
+
+          if (isDragging) {
+            for (let i = 0; i < espacios.length; i++) {
+              if (indexActual == i) continue;
+
+              if (espacios[i].overlap(celdaActual)) {
+                espacios[indexActual].x = celdaBackup.x;
+                espacios[indexActual].y = celdaBackup.y;
+                break;
+              }
+            }
+          }
+
+          isDragging = false;
+        },
+
+        agregarEspacio(w, h) {
+          espacios.push(new Celda(0, 0, w, h, getColor()));
+        }
+      };
+    })();
+
+    /************/
+
+    function setup() {
+      //background(0);
+      //noLoop();
+    }
+
+    function draw() {
+      drawGrilla();
+      drawEspacios();
+    }
+
+    function mousePressed() {
+      canvasManager.clickEspacio();
+    }
+
+    function mouseDragged() {
+      canvasManager.dragEspacio();
+    }
+
+    function mouseReleased() {
+      canvasManager.dragEnd();
+    }
+
+    function drawGrilla() {
+      var tab = canvasManager.getTablero();
+      for (let i = 0; i < tab.length; i++) {
+        strokeWeight(1);
+        stroke("#c8c8c8");
+        let c = color(tab[i].color);
+        fill(c);
+        rect(tab[i].x, tab[i].y, tab[i].w, tab[i].h);
+      }
+    }
+    function drawEspacios() {
+      var esp = canvasManager.getEspacios();
+      for (let i = 0; i < esp.length; i++) {
+        //strokeWeight(1);
+        stroke("#c8c8c8");
+        let c = color(esp[i].color);
+        c.setAlpha(128 + 128 * sin(millis() / 1000));
+        fill(c);
+        rect(
+          esp[i].x * PIXEL_SIZE,
+          esp[i].y * PIXEL_SIZE,
+          esp[i].w * PIXEL_SIZE,
+          esp[i].h * PIXEL_SIZE
+        );
+
+        fill(255, 0, 0);
+        strokeWeight(0);
+        rect(
+          esp[i].x * PIXEL_SIZE + esp[i].w * PIXEL_SIZE - PIXEL_SIZE * 0.3,
+          esp[i].y * PIXEL_SIZE,
+          PIXEL_SIZE * 0.3,
+          PIXEL_SIZE * 0.3
+        );
+      }
+    }
+  </script>
+</html>
