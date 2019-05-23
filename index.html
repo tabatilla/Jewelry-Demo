@@ -9,22 +9,30 @@
   </head>
   <body>
     <div>
-      <button onclick="canvasManager.crearCanvas(24, 12);">24x12</button>
-      <button onclick="canvasManager.crearCanvas(32, 16);">32x16</button>
+      <button onclick="canvasManager.crearCanvas(15, 17);">Small 15x17</button>
+      <button onclick="canvasManager.crearCanvas(23, 17);">Medium 23x17</button>
+      <button onclick="canvasManager.crearCanvas(29, 17);">Large 29x17</button>
+      <button onclick="canvasManager.crearCanvas(36, 17);">XL 36x17</button>
     </div>
 
     <div>
-      <button onclick="canvasManager.agregarEspacio(2, 2);">2x2</button>
       <button onclick="canvasManager.agregarEspacio(4, 4);">4x4</button>
-      <button onclick="canvasManager.agregarEspacio(5, 8);">5x8</button>
+      <button onclick="canvasManager.agregarEspacio(12, 6);">12x6</button>
+      <button onclick="canvasManager.agregarEspacio(4, 14);">4x14</button>
       <button onclick="canvasManager.agregarEspacio(6, 10);">6x10</button>
       <button onclick="canvasManager.agregarEspacio(8, 3);">8x3</button>
+      <button onclick="canvasManager.rotarEspacio();">Rotar</button>
+      <button onclick="canvasManager.duplicar();">Duplicar</button>
       <input type="number" placeholder="ancho" id="ancho" />
       <input type="number" placeholder="alto" id="alto" />
-      <button onclick="canvasManager.crearEspacio();">Crear</button>
+      <button onclick="canvasManager.crearEspacioCustom();">Crear</button>
+    </div>
+    <div>
+      <button>Renderizar en 3D</button>
     </div>
 
     <div id="canvas"></div>
+    <div id="resumen"></div>
   </body>
   <script>
     /************/
@@ -39,6 +47,7 @@
         this.w = w;
         this.h = h;
         this.color = color;
+        this.selected = false;
       }
 
       Celda.prototype.click = function(hitpos) {
@@ -95,13 +104,13 @@
       return Celda;
     })();
 
-    var canvasManager = (function() {
+    var canvasManager = (function(_callbackImpresion) {
       let _ancho = 0,
         _alto = 0;
       var tablero = [],
         espacios = [];
       var isDragging = false,
-        indexActual,
+        indexActual = -1,
         celdaActual,
         celdaBackup,
         isClosing,
@@ -139,14 +148,40 @@
       }
 
       function getColor() {
-        // var colors = ["#e17d60", "#85dcba", "#e8a87c", "#c38d9e", "#41b4a4"];
-        // return colors[Math.floor(Math.random() * colors.length)];
+        var colors = [
+          [354, 67, 85],
+          [240, 246, 159],
+          [111, 47, 76],
+          [182, 44, 89],
+          [145, 57, 88],
+          [346, 97, 86],
+          [102, 92, 132],
+          [158, 100, 14]
+        ];
+        var rdmColor = colors[Math.floor(Math.random() * colors.length)];
 
-        return color(193, 193, 193, 99);
+        return color(rdmColor[0], rdmColor[1], rdmColor[2], 99.99);
+      }
+
+      function calcularEspacioRestante() {
+        let res = 0;
+        for (let i = 0; i < espacios.length; i++) {
+          res += espacios[i].w * espacios[i].h;
+        }
+
+        _callbackImpresion(_ancho * _alto - res);
+        console.log(_ancho * _alto - res);
+      }
+
+      function agregarEspacio(x, y, w, h) {
+        espacios.push(new Celda(x, y, w, h, getColor()));
+
+        //calcular espacios restantes
+        calcularEspacioRestante();
       }
 
       return {
-        crearEspacio: function() {
+        crearEspacioCustom: function() {
           var w = document.getElementById("ancho").value;
           var h = document.getElementById("alto").value;
 
@@ -155,7 +190,7 @@
             return;
           }
 
-          espacios.push(new Celda(0, 0, w, h, "#753742"));
+          agregarEspacio(0, 0, w, h);
         },
 
         crearCanvas: function(w, h) {
@@ -176,6 +211,7 @@
 
         clickEspacio: function() {
           var m = createVector(mouseX, mouseY);
+          indexActual = -1;
 
           espacios.forEach(function(r, i) {
             if (r.click(m)) {
@@ -194,6 +230,7 @@
 
               celdaBackup = { ...r };
             }
+            espacios[i].selected = indexActual == i;
           });
 
           if (isClosing && indexActual == indexClose) {
@@ -217,8 +254,17 @@
             );
             vec.set(m).add(clickOffset);
 
-            celdaActual.x = parseInt(vec.x / PIXEL_SIZE);
-            celdaActual.y = parseInt(vec.y / PIXEL_SIZE);
+            let newx = parseInt(vec.x / PIXEL_SIZE);
+            let newy = parseInt(vec.y / PIXEL_SIZE);
+
+            //Para que los espacios no se salgan del canvas
+            if (newx < 0) newx = 0;
+            if (newx + celdaActual.w > _ancho) newx = _ancho - celdaActual.w;
+            if (newy < 0) newy = 0;
+            if (newy + celdaActual.h > _alto) newy = _alto - celdaActual.h;
+
+            celdaActual.x = newx;
+            celdaActual.y = newy;
           }
         },
 
@@ -241,17 +287,35 @@
         },
 
         agregarEspacio(w, h) {
-          espacios.push(new Celda(0, 0, w, h, getColor()));
+          agregarEspacio(0, 0, w, h);
+        },
+
+        rotarEspacio() {
+          let tempW = celdaActual.w;
+          celdaActual.w = celdaActual.h;
+          celdaActual.h = tempW;
+        },
+
+        duplicar() {
+          if (celdaActual) {
+            agregarEspacio(0, 0, celdaActual.w, celdaActual.h);
+          }
         }
       };
-    })();
+    })(imprimirMensajeEspaciosVacios);
 
     /************/
-
-    function setup() {
-      //background(0);
-      //noLoop();
+    function imprimirMensajeEspaciosVacios(numero) {
+      if (numero > 0) {
+        document.getElementById("resumen").textContent =
+          "Aún faltan " + numero + " espacios ";
+      } else {
+        document.getElementById("resumen").textContent = "Se completó";
+      }
     }
+    /************/
+
+    function setup() {}
 
     function draw() {
       drawGrilla();
@@ -283,11 +347,13 @@
     function drawEspacios() {
       var esp = canvasManager.getEspacios();
       for (let i = 0; i < esp.length; i++) {
-        //strokeWeight(1);
-        stroke("#c8c8c8");
-        let c = color(esp[i].color);
-        c.setAlpha(128 + 128 * sin(millis() / 1000));
-        fill(c);
+        strokeWeight(2);
+
+        if (esp[i].selected) stroke("#ff0000");
+        else stroke("#000000");
+
+        fill(esp[i].color);
+
         rect(
           esp[i].x * PIXEL_SIZE,
           esp[i].y * PIXEL_SIZE,
