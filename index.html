@@ -30,6 +30,7 @@
     </div>
     <div>
       <button>Renderizar en 3D</button>
+      <button onclick="canvasManager.finalizar();">Finalizar</button>
     </div>
 
     <div id="canvas"></div>
@@ -76,30 +77,32 @@
       };
 
       Celda.prototype.overlap = function(celda) {
-        var lt = { x: celda.x * PIXEL_SIZE, y: celda.y * PIXEL_SIZE },
-          lb = {
+        var r1 = {
+          bl: {
+            x: this.x * PIXEL_SIZE,
+            y: this.y * PIXEL_SIZE + this.h * PIXEL_SIZE
+          },
+          tr: {
+            x: this.x * PIXEL_SIZE + this.w * PIXEL_SIZE,
+            y: this.y * PIXEL_SIZE
+          }
+        };
+
+        var r2 = {
+          bl: {
             x: celda.x * PIXEL_SIZE,
             y: celda.y * PIXEL_SIZE + celda.h * PIXEL_SIZE
           },
-          rt = {
+          tr: {
             x: celda.x * PIXEL_SIZE + celda.w * PIXEL_SIZE,
             y: celda.y * PIXEL_SIZE
-          },
-          rb = {
-            x: celda.x * PIXEL_SIZE + celda.w * PIXEL_SIZE,
-            y: celda.y * PIXEL_SIZE + celda.h * PIXEL_SIZE
-          };
+          }
+        };
 
-        if (
-          this.click(lt) ||
-          this.click(lb) ||
-          this.click(rt) ||
-          this.click(rb)
-        ) {
-          return true;
-        }
+        if (r1.bl.y <= r2.tr.y || r2.bl.y <= r1.tr.y) return false;
+        if (r1.tr.x <= r2.bl.x || r2.tr.x <= r1.bl.x) return false;
 
-        return false;
+        return true;
       };
 
       return Celda;
@@ -113,7 +116,6 @@
       var isDragging = false,
         indexActual = -1,
         celdaActual,
-        celdaBackup,
         isClosing,
         indexClose;
 
@@ -170,14 +172,27 @@
           res += espacios[i].w * espacios[i].h;
         }
 
-        _callbackImpresion(_ancho * _alto - res);
+        return _ancho * _alto - res;
       }
 
       function agregarEspacio(x, y, w, h) {
         espacios.push(new Celda(x, y, w, h, getColor()));
 
         //calcular espacios restantes
-        calcularEspacioRestante();
+        var faltantes = calcularEspacioRestante();
+        _callbackImpresion(faltantes);
+      }
+
+      function verificarOverlaping() {
+        for (let i = 0; i < espacios.length; i++) {
+          for (let j = 0; j < espacios.length; j++) {
+            if (i == j) continue;
+            if (espacios[i].overlap(espacios[j])) {
+              return false;
+            }
+          }
+        }
+        return true;
       }
 
       return {
@@ -227,8 +242,6 @@
               isDragging = true;
               celdaActual = r;
               indexActual = i;
-
-              celdaBackup = { ...r };
             }
             espacios[i].selected = indexActual == i;
           });
@@ -269,20 +282,6 @@
         },
 
         dragEnd: function() {
-          //Si la celda actual no interfiere con las demás celdas entonces conserva su posición
-
-          if (isDragging) {
-            for (let i = 0; i < espacios.length; i++) {
-              if (indexActual == i) continue;
-
-              if (espacios[i].overlap(celdaActual)) {
-                espacios[indexActual].x = celdaBackup.x;
-                espacios[indexActual].y = celdaBackup.y;
-                break;
-              }
-            }
-          }
-
           isDragging = false;
         },
 
@@ -300,6 +299,20 @@
           if (celdaActual) {
             agregarEspacio(0, 0, celdaActual.w, celdaActual.h);
           }
+        },
+
+        finalizar() {
+          if (calcularEspacioRestante() != 0) {
+            alert("Aún existen espacios");
+            return;
+          }
+
+          if (!verificarOverlaping()) {
+            alert("Existen Rectangulos que se están sobreponiendo");
+            return;
+          }
+
+          alert("OK");
         }
       };
     })(imprimirMensajeEspaciosVacios);
