@@ -139,6 +139,16 @@ body {
   justify-content: flex-end;
 }
 
+.btn-modal {
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem;
+  font-size: 2rem;
+  color: #fff;
+  background-color: #a61e22;
+  border-color: transparent;
+}
+
 /* #canvas {
   display: inline-block;
 } */

@@ -72,10 +72,7 @@
             <button onclick="canvasManager.agregarEspacio(4, 14);">4x14</button>
             <button onclick="canvasManager.agregarEspacio(6, 10);">6x10</button>
             <button onclick="canvasManager.agregarEspacio(8, 3);">8x3</button>
-
-            <!-- <input type="number" placeholder="ancho" id="ancho" />
-            <input type="number" placeholder="alto" id="alto" />
-            <button onclick="canvasManager.crearEspacioCustom();">Crear</button> -->
+            <button data-toggle="modal" data-target="#myModal">Custom</button>
           </div>
 
           <!-- <div>
@@ -106,6 +103,63 @@
           <button class="btn-siguiente">Finish</button>
         </div>
       </div>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="myModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="myModalLabel"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title" id="myModalLabel">Custom</h4>
+            </div>
+            <div class="modal-body">
+              <div class="form-inline">
+                <div class="form-group">
+                  <label for="ancho">Width</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    name="ancho"
+                    id="ancho"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="alto">Depth</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    id="alto"
+                    name="alto"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                class="btn-modal"
+                data-dismiss="modal"
+                onclick="canvasManager.crearEspacioCustom();"
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Fin Modal -->
     </div>
   </body>
 </html>
