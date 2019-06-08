@@ -1,7 +1,144 @@
-.btn-lentes {
-  background: url(../img/lentes.jpeg);
+/* div {
+  border: solid 1px red;
+} */
+
+body {
+  background-color: #eaeaea;
 }
-.imagen-lentes {
-  width: 50px;
-  height: auto;
+
+/********** Wizard ***********/
+.wizard {
+  margin: 15px auto 60px;
+  height: 140px;
+  width: 95%;
+  background-color: #ffffff;
+  z-index: -20;
 }
+
+.navegacion {
+  display: flex;
+  height: 100px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.navegacion .nav-item {
+  height: 65px;
+  width: 65px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color: #ffffff;
+  color: #a61e22;
+  z-index: 100;
+  border: solid 1px #a61e22;
+}
+
+.navegacion .activo {
+  background-color: #a61e22;
+  color: #ffffff;
+}
+
+.navegacion .nav-item i {
+  font-size: 25px;
+  padding-top: 19px;
+}
+
+.navegacion .nav-item p {
+  padding-top: 33px;
+  color: #000000;
+}
+
+.linea {
+  position: relative;
+  height: 7px;
+  width: 85%;
+  background-color: #a61e22;
+  margin: auto;
+  bottom: -56px;
+  border-radius: 25px;
+}
+
+/********** End Wizard ***********/
+
+/********** Formulario ***********/
+.formularios {
+  position: relative;
+  top: -25px;
+  width: 95%;
+  margin: auto;
+  height: 600px;
+  background-color: #fff;
+}
+
+.formularios .btn-siguiente {
+  background-color: #797878;
+  align-self: flex-end;
+  margin-right: 60px;
+}
+
+.formularios .btn-atras {
+  background-color: #797878;
+  align-self: flex-end;
+  margin-right: 60px;
+}
+
+.formularios button {
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem;
+  font-size: 3rem;
+  color: #fff;
+  background-color: #a61e22;
+  border-color: transparent;
+}
+
+.disabled {
+  display: none;
+}
+
+.formulario1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: inherit;
+}
+
+.formularios2 {
+  height: inherit;
+}
+
+.formularios3 {
+  height: inherit;
+}
+/********** End Formulario ***********/
+
+.botones-tamanos {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.botones-funciones {
+  padding-left: 35px;
+  padding-top: 15px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  height: 400px;
+  justify-content: space-evenly;
+}
+
+.botones-footer {
+  padding-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* #canvas {
+  display: inline-block;
+} */
