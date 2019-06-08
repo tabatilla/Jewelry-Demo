@@ -80,7 +80,6 @@
 
           <!-- <div>
             <button>Renderizar en 3D</button>
-            <button onclick="canvasManager.finalizar();">Finalizar</button>
           </div> -->
           <div id="resumen"></div>
           <div class="row">
@@ -97,7 +96,7 @@
 
           <div class="botones-footer">
             <button class="btn-atras">Back</button>
-            <button class="btn-siguiente">Next</button>
+            <button class="btn-siguiente" data-tipo="finalizar">Next</button>
           </div>
         </div>
 
@@ -379,15 +378,15 @@
       finalizar() {
         if (calcularEspacioRestante() != 0) {
           alert("Aún existen espacios");
-          return;
+          return false;
         }
 
         if (!verificarOverlaping()) {
           alert("Existen Rectangulos que se están sobreponiendo");
-          return;
+          return false;
         }
 
-        alert("OK");
+        return true;
       }
     };
   })(imprimirMensajeEspaciosVacios);
@@ -492,11 +491,19 @@
   })();
 
   $(document).ready(function() {
-    $(".btn-siguiente").click(function() {
+    $(".btn-siguiente").click(function(e) {
+      if ($(e.currentTarget).data("tipo") === "finalizar") {
+        if (canvasManager.finalizar()) {
+          tabManager.siguienteTab();
+        }
+
+        return;
+      }
+
       tabManager.siguienteTab();
     });
 
-    $(".btn-atras").click(function() {
+    $(".btn-atras").click(function(e) {
       tabManager.anteriorTab();
     });
   });
