@@ -17,6 +17,8 @@
       crossorigin="anonymous"
     ></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script src="https://kit.fontawesome.com/8d49056d24.js"></script>
     <link rel="stylesheet" href="css/style.css" />
     <title>Document</title>
   </head>
@@ -26,15 +28,15 @@
         <div class="linea"></div>
         <div class="navegacion">
           <div id="item-1" class="nav-item activo">
-            <i class="glyphicon glyphicon-resize-full"></i>
+            <i class="fas fa-expand"></i>
             <p>Size</p>
           </div>
           <div id="item-2" class="nav-item">
-            <i class="glyphicon glyphicon-th-list"></i>
+            <i class="fas fa-th-list"></i>
             <p>Build</p>
           </div>
           <div id="item-3" class="nav-item">
-            <i class="glyphicon glyphicon-ok"></i>
+            <i class="fas fa-check"></i>
             <p>Summary</p>
           </div>
         </div>
@@ -81,11 +83,11 @@
           <div id="resumen"></div>
           <div class="row">
             <div class="col-md-1 botones-funciones">
-              <button onclick="canvasManager.rotarEspacio();" title="Repeat">
-                <i class="glyphicon glyphicon-repeat"></i>
+              <button onclick="canvasManager.rotarEspacio();" title="Rotate">
+                <i class="fas fa-sync-alt"></i>
               </button>
               <button onclick="canvasManager.duplicar();" title="Duplicate">
-                <i class="glyphicon glyphicon-duplicate"></i>
+                <i class="fas fa-clone"></i>
               </button>
             </div>
             <div class="col-md-11" id="canvas"></div>
@@ -270,9 +272,18 @@
 
     function clearEspacio(index) {
       if (index != null) {
-        if (confirm("¿Eliminar?")) {
-          espacios.splice(index, 1);
-        }
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#a61e22",
+          confirmButtonText: "Yes, delete it!"
+        }).then(result => {
+          if (result.value) {
+            espacios.splice(index, 1);
+          }
+        });
       }
 
       isClosing = false;
@@ -329,7 +340,12 @@
         var h = document.getElementById("alto").value;
 
         if (!w || !h) {
-          alert("Ingrese valores");
+          Swal.fire({
+            type: "error",
+            title: "Oops...",
+            text: "Enter Values",
+            confirmButtonColor: "#a61e22"
+          });
           return;
         }
 
@@ -430,13 +446,25 @@
       },
 
       finalizar() {
-        if (calcularEspacioRestante() != 0) {
-          alert("Aún existen espacios");
+        var espRestante = calcularEspacioRestante();
+
+        if (espRestante > 0) {
+          Swal.fire({
+            type: "error",
+            title: "Oops...",
+            text: "There are still some spaces to fill",
+            confirmButtonColor: "#a61e22"
+          });
           return false;
         }
 
-        if (!verificarOverlaping()) {
-          alert("Existen Rectangulos que se están sobreponiendo");
+        if (espRestante < 0 || !verificarOverlaping()) {
+          Swal.fire({
+            type: "error",
+            title: "Oops...",
+            text: "There are some rectangles overlapping each other",
+            confirmButtonColor: "#a61e22"
+          });
           return false;
         }
 

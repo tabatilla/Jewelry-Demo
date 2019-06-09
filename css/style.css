@@ -69,7 +69,7 @@ body {
   top: -25px;
   width: 95%;
   margin: auto;
-  height: 600px;
+  height: 615px;
   background-color: #fff;
 }
 
@@ -149,6 +149,10 @@ body {
   border-color: transparent;
 }
 
-/* #canvas {
-  display: inline-block;
-} */
+#resumen {
+  height: 20px;
+  border: solid 1px red;
+  padding: 15px 0px;
+  width: 90%;
+  margin: auto;
+}
