@@ -69,7 +69,7 @@ body {
   top: -25px;
   width: 95%;
   margin: auto;
-  height: 615px;
+  height: 630px;
   background-color: #fff;
 }
 
@@ -105,6 +105,10 @@ body {
   justify-content: space-around;
   align-items: center;
   height: inherit;
+}
+
+.formulario1 h2 {
+  color: #a61e22;
 }
 
 .formularios2 {
@@ -151,8 +155,14 @@ body {
 
 #resumen {
   height: 20px;
-  border: solid 1px red;
   padding: 15px 0px;
   width: 90%;
-  margin: auto;
+  margin: 0 auto 15px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: #fff;
+  background-color: #a61e2282;
+  border-radius: 25px;
 }

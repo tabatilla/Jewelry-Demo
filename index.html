@@ -45,6 +45,7 @@
       <!-- Formulario -->
       <div class="formularios">
         <div class="formulario1" id="form-1">
+          <h2>Choose the size of your tray</h2>
           <button
             onclick="canvasManager.crearCanvas(15, 17); tabManager.siguienteTab();"
           >
@@ -169,7 +170,7 @@
 <script>
   /************/
   const PIXEL_SIZE = 24;
-  const _closeSize = PIXEL_SIZE * 0.3;
+  const _closeSize = PIXEL_SIZE * 0.4;
 
   //Todas las celdas son cuadradas
   var Celda = (function() {
@@ -479,9 +480,15 @@
   function imprimirMensajeEspaciosVacios(numero) {
     if (numero > 0) {
       document.getElementById("resumen").textContent =
-        "Aún faltan " + numero + " espacios ";
-    } else {
-      document.getElementById("resumen").textContent = "Se completó";
+        "There are still " + numero + " spaces to fill";
+      return;
+    }
+    if (numero < 0) {
+      document.getElementById("resumen").textContent =
+        "Too much spaces in the tray";
+    }
+    if (numero == 0) {
+      document.getElementById("resumen").textContent = "Completed";
     }
   }
   /************/
