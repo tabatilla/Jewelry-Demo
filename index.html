@@ -282,6 +282,9 @@
         }).then(result => {
           if (result.value) {
             espacios.splice(index, 1);
+
+            //calcular espacios restantes
+            _callbackImpresion(calcularEspacioRestante());
           }
         });
       }
@@ -318,8 +321,7 @@
       espacios.push(new Celda(x, y, w, h, getColor()));
 
       //calcular espacios restantes
-      var faltantes = calcularEspacioRestante();
-      _callbackImpresion(faltantes);
+      _callbackImpresion(calcularEspacioRestante());
     }
 
     function verificarOverlaping() {
@@ -533,13 +535,22 @@
         esp[i].h * PIXEL_SIZE
       );
 
-      fill(255, 0, 0);
-      strokeWeight(0);
-      rect(
-        esp[i].x * PIXEL_SIZE + esp[i].w * PIXEL_SIZE - PIXEL_SIZE * 0.3,
-        esp[i].y * PIXEL_SIZE,
-        PIXEL_SIZE * 0.3,
-        PIXEL_SIZE * 0.3
+      //Dibujar una cruz
+      //Se le suma y resta 2 para que no esté sobre el margen del rectángulo
+      strokeWeight(3.5);
+      stroke(166, 30, 34);
+      line(
+        esp[i].x * PIXEL_SIZE + esp[i].w * PIXEL_SIZE - _closeSize,
+        esp[i].y * PIXEL_SIZE + 2,
+        esp[i].x * PIXEL_SIZE + esp[i].w * PIXEL_SIZE - 2,
+        esp[i].y * PIXEL_SIZE + _closeSize
+      );
+
+      line(
+        esp[i].x * PIXEL_SIZE + esp[i].w * PIXEL_SIZE - _closeSize,
+        esp[i].y * PIXEL_SIZE + _closeSize,
+        esp[i].x * PIXEL_SIZE + esp[i].w * PIXEL_SIZE - 2,
+        esp[i].y * PIXEL_SIZE + 2
       );
     }
   }
