@@ -13,6 +13,17 @@
     </style>
   </head>
   <body>
+    <button id="btn-navy-blue" onclick="cambiarColor(0x1c2744);">
+      Navy Blue
+    </button>
+    <button id="btn-green" onclick="cambiarColor(0x263b39);">Green</button>
+    <button id="btn-silver" onclick="cambiarColor(0xa0a394);">Silver</button>
+    <button id="btn-bungurdy" onclick="cambiarColor(0x660e21);">
+      Bungurdy
+    </button>
+    <button id="btn-black" onclick="cambiarColor(0x2c2f36);">Black</button>
+    <button id="btn-pearl" onclick="cambiarColor(0xe5e7da);">Pearl</button>
+    <button id="btn-brown" onclick="cambiarColor(0x352117);">Brown</button>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script> -->
     <script src="js/OrbitControls.js"></script>
@@ -26,12 +37,13 @@
 
       var scene = new THREE.Scene();
       var camera = new THREE.PerspectiveCamera(
-        75,
+        45,
         window.innerWidth / window.innerHeight,
-        0.1,
+        1,
         5000
       );
-      camera.position.set(TRAY_WIDTH / 2, TRAY_HEIGHT / 2, 500);
+      camera.position.set(TRAY_WIDTH / 2, TRAY_HEIGHT / 2, 700);
+      //camera.rotation.y = Math.PI / 2;
 
       var renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setClearColor("#E9E0D0");
@@ -51,14 +63,18 @@
       controls.rotateSpeed = 1.0;
       controls.zoomSpeed = 1.2;
       controls.panSpeed = 0.8;
-
+      controls.target = new THREE.Vector3(
+        (TRAY_WIDTH / 2) * PIXEL_SIZE,
+        (TRAY_HEIGHT / 2) * PIXEL_SIZE,
+        0
+      );
       //Scene
       scene = new THREE.Scene();
 
       // Helpers
       //axes = new THREE.AxisHelper(50);
-      helper = new THREE.GridHelper(1000, 10);
-      //helper.setColors(0x0000ff, 0x808080);
+      var helper = new THREE.GridHelper(1000, 10);
+      helper.setColors(0x0000ff, 0x808080);
       //scene.add(axes);
       //scene.add(helper);
 
@@ -77,12 +93,12 @@
 
       //Creación Joyero
       var materialFondo = new THREE.MeshLambertMaterial({
-        color: 0xffffff,
+        color: 0x660e21,
         side: THREE.DoubleSide
       });
 
       var materialBorde = new THREE.MeshLambertMaterial({
-        color: 0xffcc00,
+        color: 0x660e21,
         side: THREE.DoubleSide
       });
 
@@ -129,49 +145,20 @@
         );
       }
 
-      //Creación de Bordes Laterales
-
-      ///////////////////////////////////
-
-      // var bordeLadosGeometry = new THREE.BoxGeometry(20, 300, 20);
-      // var bordeSuperioresGeometry = new THREE.BoxGeometry(700, 20, 20);
-
-      // var borde1 = new THREE.Mesh(bordeLadosGeometry, materialBorde);
-      // var borde2 = new THREE.Mesh(bordeLadosGeometry, materialBorde);
-      // borde1.position.set(340, 0, -11);
-      // borde2.position.set(-340, 0, -11);
-
-      // scene.add(borde1);
-      // scene.add(borde2);
-
-      // var borde3 = new THREE.Mesh(bordeSuperioresGeometry, materialBorde);
-      // var borde4 = new THREE.Mesh(bordeSuperioresGeometry, materialBorde);
-      // borde3.position.set(0, 140, -11);
-      // borde4.position.set(0, -140, -11);
-
-      // scene.add(borde3);
-      // scene.add(borde4);
-
-      // var bordeInternoGeometry = new THREE.BoxGeometry(10, 300, 20);
-      // var bordeInterno2Geometry = new THREE.BoxGeometry(700, 10, 20);
-      // var borde5 = new THREE.Mesh(bordeInternoGeometry, materialBorde);
-      // var borde6 = new THREE.Mesh(bordeInterno2Geometry, materialBorde);
-      // var borde7 = new THREE.Mesh(bordeInternoGeometry, materialBorde);
-
-      // borde5.position.set(0, 0, -11);
-      // borde6.position.set(0, 0, -11);
-      // borde7.position.set(125, 0, -11);
-      // scene.add(borde5);
-      // scene.add(borde6);
-      // scene.add(borde7);
-
-      ///////////////////////////////////
-
       // var light = new THREE.PointLight(0xff0000, 1, 50);
       // light.position.set(1000, 0, 25);
       // scene.add(light);
 
-      var light = new THREE.HemisphereLight(0xffbf67, 0x15c6ff);
+      //var light = new THREE.HemisphereLight(0xffbf67, 0x15c6ff);
+      var light = new THREE.SpotLight(0xffffff);
+      light.position.set(
+        (TRAY_WIDTH / 2) * PIXEL_SIZE,
+        (TRAY_HEIGHT / 2) * PIXEL_SIZE,
+        620
+      );
+
+      var spotLightHelper = new THREE.SpotLightHelper(light);
+      scene.add(spotLightHelper);
       scene.add(light);
 
       var render = () => {
@@ -245,6 +232,15 @@
         scene.add(bordeInf);
 
         return;
+      }
+
+      function cambiarColor(color) {
+        scene.traverse(function(node) {
+          if (node instanceof THREE.Mesh) {
+            // insert your code here, for example:
+            node.material.color.setHex(color);
+          }
+        });
       }
     </script>
   </body>
