@@ -19,6 +19,9 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script src="https://kit.fontawesome.com/8d49056d24.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/renderizar.js"></script>
     <link rel="stylesheet" href="css/style.css" />
     <title>Document</title>
   </head>
@@ -36,6 +39,10 @@
             <p>Build</p>
           </div>
           <div id="item-3" class="nav-item">
+            <i class="fas fa-cube"></i>
+            <p>Preview</p>
+          </div>
+          <div id="item-4" class="nav-item">
             <i class="fas fa-check"></i>
             <p>Summary</p>
           </div>
@@ -78,9 +85,6 @@
             <button data-toggle="modal" data-target="#myModal">Custom</button>
           </div>
 
-          <!-- <div>
-            <button>Renderizar en 3D</button>
-          </div> -->
           <div id="resumen"></div>
           <div class="row">
             <div class="col-md-1 botones-funciones">
@@ -96,12 +100,70 @@
 
           <div class="botones-footer">
             <button class="btn-atras">Back</button>
-            <button class="btn-siguiente" data-tipo="finalizar">Next</button>
+            <button
+              class="btn-siguiente"
+              onclick="canvasManager.renderizar3d();"
+            >
+              Next
+            </button>
           </div>
         </div>
 
         <div class="formularios3 hidden" id="form-3">
-          <h2>Formulario 3</h2>
+          <h2>Colors</h2>
+          <div class="botones-colores">
+            <button
+              id="btn-navy-blue"
+              onclick="renderManager.cambiarColor(0x1c2744);"
+            >
+              Navy Blue
+            </button>
+            <button
+              id="btn-green"
+              onclick="renderManager.cambiarColor(0x263b39);"
+            >
+              Green
+            </button>
+            <button
+              id="btn-silver"
+              onclick="renderManager.cambiarColor(0xa0a394);"
+            >
+              Silver
+            </button>
+            <button
+              id="btn-bungurdy"
+              onclick="renderManager.cambiarColor(0x660e21);"
+            >
+              Bungurdy
+            </button>
+            <button
+              id="btn-black"
+              onclick="renderManager.cambiarColor(0x2c2f36);"
+            >
+              Black
+            </button>
+            <button
+              id="btn-pearl"
+              onclick="renderManager.cambiarColor(0xe5e7da);"
+            >
+              Pearl
+            </button>
+            <button
+              id="btn-brown"
+              onclick="renderManager.cambiarColor(0x352117);"
+            >
+              Brown
+            </button>
+          </div>
+          <div id="canvas-3d"></div>
+          <div class="botones-footer">
+            <button class="btn-atras">Back</button>
+            <button class="btn-siguiente" data-tipo="finalizar">Next</button>
+          </div>
+        </div>
+
+        <div class="formularios4 hidden" id="form-4">
+          <h2>Summary</h2>
           <button class="btn-atras">Back</button>
           <button class="btn-siguiente">Finish</button>
         </div>
@@ -448,28 +510,35 @@
         }
       },
 
+      renderizar3d() {
+        renderManager.init(PIXEL_SIZE, _ancho, _alto, espacios);
+        setInterval(function() {
+          renderManager.cambiarTamanio();
+        }, 1);
+      },
+
       finalizar() {
         var espRestante = calcularEspacioRestante();
 
-        if (espRestante > 0) {
-          Swal.fire({
-            type: "error",
-            title: "Oops...",
-            text: "There are still some spaces to fill",
-            confirmButtonColor: "#a61e22"
-          });
-          return false;
-        }
+        // if (espRestante > 0) {
+        //   Swal.fire({
+        //     type: "error",
+        //     title: "Oops...",
+        //     text: "There are still some spaces to fill",
+        //     confirmButtonColor: "#a61e22"
+        //   });
+        //   return false;
+        // }
 
-        if (espRestante < 0 || !verificarOverlaping()) {
-          Swal.fire({
-            type: "error",
-            title: "Oops...",
-            text: "There are some rectangles overlapping each other",
-            confirmButtonColor: "#a61e22"
-          });
-          return false;
-        }
+        // if (espRestante < 0 || !verificarOverlaping()) {
+        //   Swal.fire({
+        //     type: "error",
+        //     title: "Oops...",
+        //     text: "There are some rectangles overlapping each other",
+        //     confirmButtonColor: "#a61e22"
+        //   });
+        //   return false;
+        // }
 
         return true;
       }
@@ -563,7 +632,7 @@
   }
 
   var tabManager = (function() {
-    var numFormularios = 3;
+    var numFormularios = 4;
     var tabActual = 1;
     return {
       siguienteTab() {

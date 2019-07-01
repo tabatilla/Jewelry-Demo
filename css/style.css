@@ -166,3 +166,18 @@ body {
   background-color: #a61e2282;
   border-radius: 25px;
 }
+
+canvas {
+  height: 630px;
+}
+
+.botones-colores {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* #canvas-3d {
+  width: 100%;
+  height: 630;
+} */
