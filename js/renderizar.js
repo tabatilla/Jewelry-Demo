@@ -70,7 +70,9 @@ var renderManager = (function() {
       );
       _camera.position.set(_tray_width / 2, _tray_height / 2, 700);
 
-      //_camera.rotation.y = Math.PI / 2;
+      //_camera.rotation.x = Math.PI / 2;
+      //_camera.rotateX(Math.PI / 2);
+      //_camera.rotation.x = (90 * Math.PI) / 180;
 
       _renderer = new THREE.WebGLRenderer({ antialias: true });
       _renderer.setClearColor("#FFFFFF");
@@ -84,11 +86,11 @@ var renderManager = (function() {
         _renderer.setSize(_container.offsetWidth, 600);
         _camera.aspect = _container.offsetWidth / 600;
 
-        _camera.updateProjectionMatrix();
+        //_camera.updateProjectionMatrix();
       });
 
       //_controls
-      _controls = new THREE.OrbitControls(_camera);
+      _controls = new THREE.OrbitControls(_camera, _container);
       _controls.rotateSpeed = 1.0;
       _controls.zoomSpeed = 1.2;
       _controls.panSpeed = 0.8;
@@ -167,6 +169,7 @@ var renderManager = (function() {
       //   _controls.update();
       // };
 
+      _camera.lookAt(_scene.position);
       renderManager.render();
     },
 
@@ -197,7 +200,15 @@ var renderManager = (function() {
     },
 
     rotar: function() {
-      _camera.rotation.x += 0.1;
+      // _camera.rotateX(Math.PI / 2);
+      // _camera.updateProjectionMatrix();
+      //_camera.position.set(_tray_width / 2, _tray_height / 2, 700);
+
+      var speed = Date.now() * 0.00025;
+      _camera.position.x = Math.cos(speed) * 10;
+
+      //camera.lookAt(scene.position); //0,0,0
+      _renderer.render(_scene, _camera);
     }
   };
 })();
