@@ -1,15 +1,20 @@
 /************/
 const PIXEL_SIZE = 24;
 const _closeSize = PIXEL_SIZE * 0.4;
+const PRECIO_CELDA = 1;
+const PRECIO_CELDA_RING = 2;
 
 //Todas las celdas son cuadradas
+//Tipo 1 = normal
+//tipo 2 = ring
 var Celda = (function() {
-  function Celda(x, y, w, h, color) {
+  function Celda(x, y, w, h, color, tipo) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
     this.color = color;
+    this.tipo = tipo || 1;
     this.selected = false;
   }
 
@@ -80,6 +85,59 @@ var canvasManager = (function(_callbackImpresion) {
     isClosing,
     indexClose;
 
+  var app4 = new Vue({
+    el: "#app-4",
+    data: {
+      espacios: espacios
+    },
+    methods: {
+      calcularPrecio: function(espacio) {
+        if (espacio.tipo === 1) {
+          return `$${espacio.w * espacio.h * espacio.count * PRECIO_CELDA}`;
+        }
+        return `$${espacio.w * espacio.h * espacio.count * PRECIO_CELDA_RING}`;
+      },
+
+      getName: function(espacio) {
+        return (
+          "" +
+          espacio.w +
+          "x" +
+          espacio.h +
+          (espacio.tipo === 2 ? " Ribbon" : "")
+        );
+      },
+
+      calcularTotal: function() {
+        let res = 0;
+        for (let i = 0; i < this.espacios.length; i++) {
+          res +=
+            this.espacios[i].w *
+            this.espacios[i].h *
+            (this.espacios[i].tipo === 1 ? PRECIO_CELDA : PRECIO_CELDA_RING);
+        }
+
+        return `$${res}`;
+      }
+    },
+    computed: {
+      espaciosAgrupados: function() {
+        var map = this.espacios.reduce(function(obj, b) {
+          const key = "" + b.w + "x" + b.h + "-" + b.tipo;
+
+          obj[key] = {
+            count: obj[key] ? ++obj[key].count : 0 || 1,
+            tipo: b.tipo,
+            w: b.w,
+            h: b.h
+          };
+          return obj;
+        }, {});
+        return map;
+      }
+    }
+  });
+
   function crearGrilla() {
     for (let i = 0; i < _ancho; i++) {
       for (let j = 0; j < _alto; j++) {
@@ -148,8 +206,8 @@ var canvasManager = (function(_callbackImpresion) {
     return _ancho * _alto - res;
   }
 
-  function agregarEspacio(x, y, w, h) {
-    espacios.push(new Celda(x, y, w, h, getColor()));
+  function agregarEspacio(x, y, w, h, tipo) {
+    espacios.push(new Celda(x, y, w, h, getColor(), tipo));
 
     //calcular espacios restantes
     _callbackImpresion(calcularEspacioRestante());
@@ -182,7 +240,24 @@ var canvasManager = (function(_callbackImpresion) {
         return;
       }
 
-      agregarEspacio(0, 0, parseInt(w), parseInt(h));
+      agregarEspacio(0, 0, parseInt(w), parseInt(h), 1);
+    },
+
+    crearEspacioCustomRing: function() {
+      var w = document.getElementById("anchoRing").value;
+      var h = document.getElementById("altoRing").value;
+
+      if (!w || !h) {
+        Swal.fire({
+          type: "error",
+          title: "Oops...",
+          text: "Enter Values",
+          confirmButtonColor: "#a61e22"
+        });
+        return;
+      }
+
+      agregarEspacio(0, 0, parseInt(w), parseInt(h), 2);
     },
 
     crearCanvas: function(w, h) {
@@ -263,7 +338,11 @@ var canvasManager = (function(_callbackImpresion) {
     },
 
     agregarEspacio(w, h) {
-      agregarEspacio(0, 0, w, h);
+      agregarEspacio(0, 0, w, h, 1);
+    },
+
+    agregarEspacioRing(w, h) {
+      agregarEspacio(0, 0, w, h, 2);
     },
 
     rotarEspacio() {
@@ -274,7 +353,7 @@ var canvasManager = (function(_callbackImpresion) {
 
     duplicar() {
       if (celdaActual) {
-        agregarEspacio(0, 0, celdaActual.w, celdaActual.h);
+        agregarEspacio(0, 0, celdaActual.w, celdaActual.h, celdaActual.tipo);
       }
     },
 

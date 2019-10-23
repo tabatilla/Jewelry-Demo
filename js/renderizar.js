@@ -193,6 +193,8 @@ var renderManager = (function() {
       });
     },
 
+    getImage: function() {},
+
     cambiarTamanio: function() {
       _renderer.setSize(_container.offsetWidth, 600);
       _camera.aspect = _container.offsetWidth / 600;

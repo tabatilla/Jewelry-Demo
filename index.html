@@ -20,9 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script src="https://kit.fontawesome.com/8d49056d24.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
-    <script src="js/core.js"></script>
-    <script src="js/OrbitControls.js"></script>
-    <script src="js/renderizar.js"></script>
+
     <link rel="stylesheet" href="css/style.css" />
     <title>Document</title>
   </head>
@@ -83,7 +81,13 @@
             <button onclick="canvasManager.agregarEspacio(4, 14);">4x14</button>
             <button onclick="canvasManager.agregarEspacio(6, 10);">6x10</button>
             <button onclick="canvasManager.agregarEspacio(8, 3);">8x3</button>
+            <button onclick="canvasManager.agregarEspacioRing(3, 2);">
+              3x2 Ring
+            </button>
             <button data-toggle="modal" data-target="#myModal">Custom</button>
+            <button data-toggle="modal" data-target="#myModalRing">
+              Custom Ring
+            </button>
           </div>
 
           <div id="resumen"></div>
@@ -96,9 +100,33 @@
                 <i class="fas fa-clone"></i>
               </button>
             </div>
-            <div class="col-md-11" id="canvas"></div>
+            <div class="col-md-9" id="canvas"></div>
+            <div class="col-md-2">
+              <table id="app-4" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Quantity</th>
+                    <th>Box</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="value in espaciosAgrupados">
+                    <td>{{ value.count }}</td>
+                    <td>{{ getName(value) }}</td>
+                    <td>
+                      {{ calcularPrecio(value) }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>Total:</td>
+                    <td>{{ calcularTotal() }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-
           <div class="botones-footer">
             <button class="btn-atras">Back</button>
             <button
@@ -165,6 +193,9 @@
           <div id="canvas-3d"></div>
           <div class="botones-footer">
             <button class="btn-atras">Back</button>
+            <button class="btn-atras" onclick="renderManager.getImage();">
+              Get Image
+            </button>
             <button class="btn-siguiente" data-tipo="finalizar">Next</button>
           </div>
         </div>
@@ -232,6 +263,67 @@
         </div>
       </div>
       <!-- Fin Modal -->
+
+      <!-- Modal Ring-->
+      <div
+        class="modal fade"
+        id="myModalRing"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="myModalRingLabel"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title" id="myModalRingLabel">Custom</h4>
+            </div>
+            <div class="modal-body">
+              <div class="form-inline">
+                <div class="form-group">
+                  <label for="ancho">Width</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    name="anchoRing"
+                    id="anchoRing"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="alto">Depth</label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    id="altoRing"
+                    name="altoRing"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                class="btn-modal"
+                data-dismiss="modal"
+                onclick="canvasManager.crearEspacioCustomRing();"
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Fin Modal -->
     </div>
   </body>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/OrbitControls.js"></script>
+  <script src="js/renderizar.js"></script>
 </html>
