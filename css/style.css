@@ -85,6 +85,18 @@ body {
   margin-right: 60px;
 }
 
+.formularios a {
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem;
+  font-size: 3rem;
+  color: #fff;
+  background-color: #797878;
+  border-color: transparent;
+  align-self: flex-end;
+  margin-right: 60px;
+}
+
 .formularios button {
   cursor: pointer;
   border: 1px solid transparent;

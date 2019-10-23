@@ -74,7 +74,10 @@ var renderManager = (function() {
       //_camera.rotateX(Math.PI / 2);
       //_camera.rotation.x = (90 * Math.PI) / 180;
 
-      _renderer = new THREE.WebGLRenderer({ antialias: true });
+      _renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true
+      });
       _renderer.setClearColor("#FFFFFF");
       _renderer.setSize(_container.offsetWidth, _container.offsetHeight);
 
@@ -193,7 +196,13 @@ var renderManager = (function() {
       });
     },
 
-    getImage: function() {},
+    getImage: function() {
+      const dataURL = _renderer.domElement.toDataURL("image/png");
+
+      const exportLink = document.getElementById("downloadTray");
+      exportLink.href = dataURL;
+      exportLink.download = "export.png";
+    },
 
     cambiarTamanio: function() {
       _renderer.setSize(_container.offsetWidth, 600);
