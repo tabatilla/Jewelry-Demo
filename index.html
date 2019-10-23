@@ -4,25 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-      crossorigin="anonymous"
     />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.min.js"></script>
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-      crossorigin="anonymous"
-    ></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
-    <script src="https://kit.fontawesome.com/8d49056d24.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
-
     <link rel="stylesheet" href="css/style.css" />
-    <title>Document</title>
+    <title>Create your jewelry box</title>
   </head>
   <body>
     <div class="container">
@@ -47,96 +36,101 @@
           </div>
         </div>
       </div>
-
-      <!-- Formulario -->
       <div class="formularios">
         <div class="formulario1" id="form-1">
           <h2>Choose the size of your tray</h2>
           <button
+            class="btn btn-primary btn-tray"
             onclick="canvasManager.crearCanvas(15, 17); tabManager.siguienteTab();"
           >
             Small 15x17
           </button>
           <button
+            class="btn btn-primary btn-tray"
             onclick="canvasManager.crearCanvas(23, 17); tabManager.siguienteTab();"
           >
             Medium 23x17
           </button>
           <button
+            class="btn btn-primary btn-tray"
             onclick="canvasManager.crearCanvas(29, 17); tabManager.siguienteTab();"
           >
             Large 29x17
           </button>
           <button
+            class="btn btn-primary btn-tray"
             onclick="canvasManager.crearCanvas(36, 17); tabManager.siguienteTab();"
           >
             XL 36x17
           </button>
         </div>
-
-        <div class="formularios2 hidden" id="form-2">
-          <div class="botones-tamanos">
-            <button onclick="canvasManager.agregarEspacio(4, 4);">4x4</button>
-            <button onclick="canvasManager.agregarEspacio(12, 6);">12x6</button>
-            <button onclick="canvasManager.agregarEspacio(4, 14);">4x14</button>
-            <button onclick="canvasManager.agregarEspacio(6, 10);">6x10</button>
-            <button onclick="canvasManager.agregarEspacio(8, 3);">8x3</button>
-            <button onclick="canvasManager.agregarEspacioRing(3, 2);">
-              3x2 Ring
-            </button>
-            <button data-toggle="modal" data-target="#myModal">Custom</button>
-            <button data-toggle="modal" data-target="#myModalRing">
-              Custom Ring
-            </button>
-          </div>
-
-          <div id="resumen"></div>
-          <div class="row">
-            <div class="col-md-1 botones-funciones">
-              <button onclick="canvasManager.rotarEspacio();" title="Rotate">
-                <i class="fas fa-sync-alt"></i>
-              </button>
-              <button onclick="canvasManager.duplicar();" title="Duplicate">
-                <i class="fas fa-clone"></i>
-              </button>
+                <div class="formularios2 hidden" id="form-2">
+                    <div class="container">
+                    <div class="botones-tamanos">
+                      <button onclick="canvasManager.agregarEspacio(4, 4);"><img src="icons/glasses.svg" alt="glasses"> 4x4</button>
+                      <button onclick="canvasManager.agregarEspacio(12, 6);"><img src="icons/wristwatch.svg" alt="watch"> 12x6</button>
+                      <button onclick="canvasManager.agregarEspacio(4, 14);"><img src="icons/earrings.svg" alt="earrings"> 4x14</button>
+                      <button onclick="canvasManager.agregarEspacio(6, 10);"><img src="icons/glow.svg" alt="bracelet"> 6x10</button>
+                      <button onclick="canvasManager.agregarEspacio(8, 3);"><img src="icons/necklace.svg" alt=""> 8x3</button>
+                      <button data-toggle="modal" data-target="#myModal">Custom</button>
+                      <button onclick="canvasManager.agregarEspacioRing(3, 2);"><img src="icons/diamond-ring.svg" alt="ring"> 3x2Ring
+                      </button>
+                      <button data-toggle="modal" data-target="#myModalRing">
+                        Custom Ring
+                      </button>
+                    </div>                
+                    <div>
+                        <div class="resumen"><span>Spaces to fill : </span> <span id="resumen"></span></div> 
+                      <div class="botones-funciones">
+                        <button onclick="canvasManager.rotarEspacio();" title="Rotate">
+                          <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button onclick="canvasManager.duplicar();" title="Duplicate">
+                          <i class="fas fa-clone"></i>
+                        </button>
+                      </div>
+                    </div>
+                      <div class="row">
+                      <div class="col-md-9" id="canvas"></div>
+                      <div class="col-md-2">
+                        <table id="app-4" class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th>Quantity</th>
+                              <th>Box</th>
+                              <th>Price</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr v-for="value in espaciosAgrupados">
+                              <td>{{ value.count }}</td>
+                              <td>{{ getName(value) }}</td>
+                              <td>
+                                {{ calcularPrecio(value) }}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td></td>
+                              <td>Total:</td>
+                              <td>{{ calcularTotal() }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="botones-footer">
+                      <button class="btn-atras">Back</button>
+                      <button
+                        class="btn-siguiente"
+                        onclick="canvasManager.renderizar3d();"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
             </div>
-            <div class="col-md-9" id="canvas"></div>
-            <div class="col-md-2">
-              <table id="app-4" class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Quantity</th>
-                    <th>Box</th>
-                    <th>Price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="value in espaciosAgrupados">
-                    <td>{{ value.count }}</td>
-                    <td>{{ getName(value) }}</td>
-                    <td>
-                      {{ calcularPrecio(value) }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td>Total:</td>
-                    <td>{{ calcularTotal() }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="botones-footer">
-            <button class="btn-atras">Back</button>
-            <button
-              class="btn-siguiente"
-              onclick="canvasManager.renderizar3d();"
-            >
-              Next
-            </button>
-          </div>
-        </div>
+          
+
 
         <div class="formularios3 hidden" id="form-3">
           <div class="botones-colores">
@@ -206,8 +200,6 @@
           <button class="btn-siguiente">Finish</button>
         </div>
       </div>
-
-      <!-- Modal -->
       <div
         class="modal fade"
         id="myModal"
@@ -262,9 +254,6 @@
           </div>
         </div>
       </div>
-      <!-- Fin Modal -->
-
-      <!-- Modal Ring-->
       <div
         class="modal fade"
         id="myModalRing"
@@ -319,9 +308,14 @@
           </div>
         </div>
       </div>
-      <!-- Fin Modal -->
     </div>
   </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+  <script src="https://kit.fontawesome.com/8d49056d24.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="js/core.js"></script>
   <script src="js/OrbitControls.js"></script>

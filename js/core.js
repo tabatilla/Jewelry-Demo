@@ -395,8 +395,7 @@ var canvasManager = (function(_callbackImpresion) {
 /************/
 function imprimirMensajeEspaciosVacios(numero) {
   if (numero > 0) {
-    document.getElementById("resumen").textContent =
-      "There are still " + numero + " spaces to fill";
+    document.getElementById("resumen").textContent = numero;
     return;
   }
   if (numero < 0) {
