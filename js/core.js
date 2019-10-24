@@ -100,11 +100,7 @@ var canvasManager = (function(_callbackImpresion) {
 
       getName: function(espacio) {
         return (
-          "" +
-          espacio.w +
-          "x" +
-          espacio.h +
-          (espacio.tipo === 2 ? " Ribbon" : "")
+          "" + espacio.w + "x" + espacio.h + (espacio.tipo === 2 ? " Ring" : "")
         );
       },
 
@@ -521,4 +517,15 @@ $(document).ready(function() {
   $(".btn-atras").click(function(e) {
     tabManager.anteriorTab();
   });
+});
+
+$("#myModal").on("show.bs.modal", function(e) {
+  document.getElementById("ancho").value = 3;
+  document.getElementById("alto").value = 2;
+});
+
+$("#myModalRing").on("show.bs.modal", function(e) {
+  console.log();
+  document.getElementById("anchoRing").value = 8;
+  document.getElementById("altoRing").value = 2;
 });

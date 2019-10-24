@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato&display=swap"
+      rel="stylesheet"
+    />
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -64,73 +67,84 @@
             XL 36x17
           </button>
         </div>
-                <div class="formularios2 hidden" id="form-2">
-                    <div class="container">
-                    <div class="botones-tamanos">
-                      <button onclick="canvasManager.agregarEspacio(4, 4);"><img src="icons/glasses.svg" alt="glasses"> 4x4</button>
-                      <button onclick="canvasManager.agregarEspacio(12, 6);"><img src="icons/wristwatch.svg" alt="watch"> 12x6</button>
-                      <button onclick="canvasManager.agregarEspacio(4, 14);"><img src="icons/earrings.svg" alt="earrings"> 4x14</button>
-                      <button onclick="canvasManager.agregarEspacio(6, 10);"><img src="icons/glow.svg" alt="bracelet"> 6x10</button>
-                      <button onclick="canvasManager.agregarEspacio(8, 3);"><img src="icons/necklace.svg" alt=""> 8x3</button>
-                      <button data-toggle="modal" data-target="#myModal">Custom</button>
-                      <button onclick="canvasManager.agregarEspacioRing(3, 2);"><img src="icons/diamond-ring.svg" alt="ring"> 3x2Ring
-                      </button>
-                      <button data-toggle="modal" data-target="#myModalRing">
-                        Custom Ring
-                      </button>
-                    </div>                
-                    <div>
-                        <div class="resumen"><span>Spaces to fill : </span> <span id="resumen"></span></div> 
-                      <div class="botones-funciones">
-                        <button onclick="canvasManager.rotarEspacio();" title="Rotate">
-                          <i class="fas fa-sync-alt"></i>
-                        </button>
-                        <button onclick="canvasManager.duplicar();" title="Duplicate">
-                          <i class="fas fa-clone"></i>
-                        </button>
-                      </div>
-                    </div>
-                      <div class="row">
-                      <div class="col-md-9" id="canvas"></div>
-                      <div class="col-md-2">
-                        <table id="app-4" class="table table-striped">
-                          <thead>
-                            <tr>
-                              <th>Quantity</th>
-                              <th>Box</th>
-                              <th>Price</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr v-for="value in espaciosAgrupados">
-                              <td>{{ value.count }}</td>
-                              <td>{{ getName(value) }}</td>
-                              <td>
-                                {{ calcularPrecio(value) }}
-                              </td>
-                            </tr>
-                            <tr>
-                              <td></td>
-                              <td>Total:</td>
-                              <td>{{ calcularTotal() }}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <div class="botones-footer">
-                      <button class="btn-atras">Back</button>
-                      <button
-                        class="btn-siguiente"
-                        onclick="canvasManager.renderizar3d();"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </div>
+        <div class="formularios2 hidden" id="form-2">
+          <div class="container">
+            <div class="botones-tamanos">
+              <button onclick="canvasManager.agregarEspacio(4, 4);">
+                <img src="icons/glasses.svg" alt="glasses" /> 4x4
+              </button>
+              <button onclick="canvasManager.agregarEspacio(12, 6);">
+                <img src="icons/wristwatch.svg" alt="watch" /> 12x6
+              </button>
+              <button onclick="canvasManager.agregarEspacio(4, 14);">
+                <img src="icons/earrings.svg" alt="earrings" /> 4x14
+              </button>
+              <button onclick="canvasManager.agregarEspacio(6, 10);">
+                <img src="icons/glow.svg" alt="bracelet" /> 6x10
+              </button>
+              <button onclick="canvasManager.agregarEspacio(8, 3);">
+                <img src="icons/necklace.svg" alt="" /> 8x3
+              </button>
+              <button data-toggle="modal" data-target="#myModal">Custom</button>
+              <button onclick="canvasManager.agregarEspacioRing(3, 2);">
+                <img src="icons/diamond-ring.svg" alt="ring" /> 3x2Ring
+              </button>
+              <button data-toggle="modal" data-target="#myModalRing">
+                Custom Ring
+              </button>
             </div>
-          
-
+            <div>
+              <div class="resumen">
+                <span>Spaces to fill : </span> <span id="resumen"></span>
+              </div>
+              <div class="botones-funciones">
+                <button onclick="canvasManager.rotarEspacio();" title="Rotate">
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+                <button onclick="canvasManager.duplicar();" title="Duplicate">
+                  <i class="fas fa-clone"></i>
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-9" id="canvas"></div>
+              <div class="col-md-2">
+                <table id="app-4" class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Quantity</th>
+                      <th>Box</th>
+                      <th>Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="value in espaciosAgrupados">
+                      <td>{{ value.count }}</td>
+                      <td>{{ getName(value) }}</td>
+                      <td>
+                        {{ calcularPrecio(value) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td>Total:</td>
+                      <td>{{ calcularTotal() }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="botones-footer">
+              <button class="btn-atras">Back</button>
+              <button
+                class="btn-siguiente"
+                onclick="canvasManager.renderizar3d();"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
 
         <div class="formularios3 hidden" id="form-3">
           <div class="botones-colores">
@@ -272,7 +286,7 @@
               >
                 <span aria-hidden="true">&times;</span>
               </button>
-              <h4 class="modal-title" id="myModalRingLabel">Custom</h4>
+              <h4 class="modal-title" id="myModalRingLabel">Custom Ring</h4>
             </div>
             <div class="modal-body">
               <div class="form-inline">
