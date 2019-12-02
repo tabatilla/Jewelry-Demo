@@ -354,35 +354,37 @@ var canvasManager = (function(_callbackImpresion) {
     },
 
     renderizar3d() {
+      var espRestante = calcularEspacioRestante();
+
+      if (espRestante > 0) {
+        Swal.fire({
+          type: "error",
+          title: "Oops...",
+          text: "There are still some spaces to fill",
+          confirmButtonColor: "#a61e22"
+        });
+        return false;
+      }
+
+      if (espRestante < 0 || !verificarOverlaping()) {
+        Swal.fire({
+          type: "error",
+          title: "Oops...",
+          text: "There are some rectangles overlapping each other",
+          confirmButtonColor: "#a61e22"
+        });
+        return false;
+      }
+
       renderManager.init(PIXEL_SIZE, _ancho, _alto, espacios);
       setInterval(function() {
         renderManager.cambiarTamanio();
       }, 1);
+
+      return true;
     },
 
     finalizar() {
-      var espRestante = calcularEspacioRestante();
-
-      // if (espRestante > 0) {
-      //   Swal.fire({
-      //     type: "error",
-      //     title: "Oops...",
-      //     text: "There are still some spaces to fill",
-      //     confirmButtonColor: "#a61e22"
-      //   });
-      //   return false;
-      // }
-
-      // if (espRestante < 0 || !verificarOverlaping()) {
-      //   Swal.fire({
-      //     type: "error",
-      //     title: "Oops...",
-      //     text: "There are some rectangles overlapping each other",
-      //     confirmButtonColor: "#a61e22"
-      //   });
-      //   return false;
-      // }
-
       return true;
     }
   };
@@ -503,6 +505,14 @@ var tabManager = (function() {
 
 $(document).ready(function() {
   $(".btn-siguiente").click(function(e) {
+    if ($(e.currentTarget).data("tipo") === "renderizar3d") {
+      if (canvasManager.renderizar3d()) {
+        tabManager.siguienteTab();
+      }
+
+      return;
+    }
+
     if ($(e.currentTarget).data("tipo") === "finalizar") {
       if (canvasManager.finalizar()) {
         tabManager.siguienteTab();
