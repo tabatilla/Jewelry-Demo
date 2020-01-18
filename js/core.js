@@ -139,7 +139,6 @@ var canvasManager = (function(_callbackImpresion) {
           };
           return obj;
         }, {});
-        console.log(map);
         return map;
       }
     }
@@ -402,6 +401,10 @@ var canvasManager = (function(_callbackImpresion) {
       return true;
     },
 
+    comprobarValores() {
+      return _ancho && _alto && _height && _ancho_f && _alto_f && _height_f;
+    },
+
     finalizar() {
       return true;
     }
@@ -500,6 +503,17 @@ var tabManager = (function() {
     siguienteTab() {
       if (tabActual + 1 > numFormularios) return;
 
+      if (tabActual === 1) {
+        if (!canvasManager.comprobarValores()) {
+          Swal.fire(
+            "Incomplete Data",
+            "There are some data you need to fill",
+            "warning"
+          );
+          return;
+        }
+      }
+
       $("#form-" + tabActual).addClass("hidden");
       $("#item-" + tabActual).removeClass("activo");
 
@@ -553,7 +567,6 @@ $("#myModal").on("show.bs.modal", function(e) {
 });
 
 $("#myModalRing").on("show.bs.modal", function(e) {
-  console.log();
   document.getElementById("anchoRing").value = 8;
   document.getElementById("altoRing").value = 2;
 });
