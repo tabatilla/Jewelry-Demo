@@ -76,7 +76,14 @@ var Celda = (function() {
 
 var canvasManager = (function(_callbackImpresion) {
   let _ancho = 0,
-    _alto = 0;
+    _alto = 0, //depth
+    _height = 0;
+
+  /////////
+  _ancho_f = "";
+  _alto_f = "";
+  _height_f = "";
+
   var tablero = [],
     espacios = [];
   var isDragging = false,
@@ -105,6 +112,7 @@ var canvasManager = (function(_callbackImpresion) {
       },
 
       calcularTotal: function() {
+        let justPrice = 89.5;
         let res = 0;
         for (let i = 0; i < this.espacios.length; i++) {
           res +=
@@ -112,6 +120,8 @@ var canvasManager = (function(_callbackImpresion) {
             this.espacios[i].h *
             (this.espacios[i].tipo === 1 ? PRECIO_CELDA : PRECIO_CELDA_RING);
         }
+
+        res += justPrice;
 
         return `$${res}`;
       }
@@ -129,6 +139,7 @@ var canvasManager = (function(_callbackImpresion) {
           };
           return obj;
         }, {});
+        console.log(map);
         return map;
       }
     }
@@ -256,9 +267,16 @@ var canvasManager = (function(_callbackImpresion) {
       agregarEspacio(0, 0, parseInt(w), parseInt(h), 2);
     },
 
-    crearCanvas: function(w, h) {
-      _ancho = w;
-      _alto = h;
+    saveTamanio: function(tipo, value) {
+      if (tipo === "ancho") _ancho = parseInt(value);
+      if (tipo === "ancho_f") _ancho_f = parseInt(value);
+      if (tipo === "alto") _alto = parseInt(value);
+      if (tipo === "alto_f") _alto_f = value;
+      if (tipo === "height") _height = value;
+      if (tipo === "height_f") _height_f = value;
+    },
+
+    crearCanvas: function() {
       crearGrilla();
 
       resizeCanvas(_ancho * PIXEL_SIZE + 1, _alto * PIXEL_SIZE + 1);

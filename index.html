@@ -42,7 +42,7 @@
       <div class="formularios">
         <div class="formulario1" id="form-1">
           <h2>Choose the size of your tray</h2>
-          <button
+          <!-- <button
             class="btn btn-primary btn-tray"
             onclick="canvasManager.crearCanvas(15, 17); tabManager.siguienteTab();"
           >
@@ -65,7 +65,36 @@
             onclick="canvasManager.crearCanvas(36, 17); tabManager.siguienteTab();"
           >
             XL 36x17
+          </button> -->
+          <button
+            data-toggle="modal"
+            data-target="#widthTray"
+            class="btn btn-primary btn-tray"
+          >
+            Width
           </button>
+          <button
+            data-toggle="modal"
+            data-target="#depthTray"
+            class="btn btn-primary btn-tray"
+          >
+            Depth
+          </button>
+          <button
+            data-toggle="modal"
+            data-target="#heightTray"
+            class="btn btn-primary btn-tray"
+          >
+            Height
+          </button>
+
+          <div class="botones-footer">
+            <button
+              onclick="canvasManager.crearCanvas(); tabManager.siguienteTab();"
+            >
+              Next
+            </button>
+          </div>
         </div>
         <div class="formularios2 hidden" id="form-2">
           <div class="container">
@@ -124,6 +153,11 @@
                       <td>
                         {{ calcularPrecio(value) }}
                       </td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td>Just Price:</td>
+                      <td>$89.50</td>
                     </tr>
                     <tr>
                       <td></td>
@@ -314,6 +348,150 @@
                 onclick="canvasManager.crearEspacioCustomRing();"
               >
                 Create
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="widthTray" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              Choose Width
+            </div>
+            <div class="modal-body">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-xs-offset-2 col-xs-2">Width</label>
+                  <div class="col-xs-4">
+                    <select
+                      class="form-control"
+                      onchange="canvasManager.saveTamanio('ancho', this.value)"
+                    >
+                      <option value="" disabled selected
+                        >Select your option</option
+                      >
+                      <option value="15">15</option>
+                      <option value="23">23</option>
+                      <option value="29">29</option>
+                      <option value="36">36</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-xs-offset-2 col-xs-2">Fraction</label>
+                  <div class="col-xs-4">
+                    <select
+                      class="form-control"
+                      onchange="canvasManager.saveTamanio('ancho_f', this.value)"
+                    >
+                      <option value="" disabled selected
+                        >Select your option</option
+                      >
+                      <option value="3/5">3/5</option>
+                      <option value="3/5">7/5</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-modal" data-dismiss="modal" aria-label="Close">
+                Ok
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="depthTray" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              Choose Depth
+            </div>
+            <div class="modal-body">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-xs-offset-2 col-xs-2">Depth</label>
+                  <div class="col-xs-4">
+                    <select
+                      class="form-control"
+                      onchange="canvasManager.saveTamanio('alto', this.value)"
+                    >
+                      <option value="" disabled selected
+                        >Select your option</option
+                      >
+                      <option value="17">17</option>
+                      <option value="21">21</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-xs-offset-2 col-xs-2">Fraction</label>
+                  <div class="col-xs-4">
+                    <select
+                      class="form-control"
+                      onchange="canvasManager.saveTamanio('alto_f', this.value)"
+                    >
+                      <option value="" disabled selected
+                        >Select your option</option
+                      >
+                      <option value="3/5">3/5</option>
+                      <option value="7/5">7/5</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-modal" data-dismiss="modal" aria-label="Close">
+                Ok
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="heightTray" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              Choose Height
+            </div>
+            <div class="modal-body">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-xs-offset-2 col-xs-2">Height</label>
+                  <div class="col-xs-4">
+                    <select
+                      class="form-control"
+                      onchange="canvasManager.saveTamanio('height', this.value)"
+                    >
+                      <option value="" disabled selected
+                        >Select your option</option
+                      >
+                      <option value="3">3</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-xs-offset-2 col-xs-2">Fraction</label>
+                  <div class="col-xs-4">
+                    <select
+                      class="form-control"
+                      onchange="canvasManager.saveTamanio('height_f', this.value)"
+                    >
+                      <option value="" disabled selected
+                        >Select your option</option
+                      >
+                      <option value="3/5">3/5</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-modal" data-dismiss="modal" aria-label="Close">
+                Ok
               </button>
             </div>
           </div>
