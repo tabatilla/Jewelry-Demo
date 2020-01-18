@@ -45,7 +45,20 @@
       </div>
       <div class="formularios">
         <div class="formulario1" id="form-1">
-          <h2>Choose the size of your tray</h2>
+          <div class="div-help">
+            <button
+              class="btn-help"
+              id="tour-btn-help"
+              onclick="restartTour(1);"
+              title="Make this tour again"
+            >
+              <i class="fas fa-question"></i>
+            </button>
+          </div>
+          <div>
+            <h2>Choose the size of your tray</h2>
+          </div>
+
           <button
             data-toggle="modal"
             data-target="#widthTray"
@@ -78,6 +91,15 @@
           </div>
         </div>
         <div class="formularios2 hidden" id="form-2">
+          <div class="div-help">
+            <button
+              class="btn-help"
+              onclick="restartTour(2);"
+              title="Make this tour again"
+            >
+              <i class="fas fa-question"></i>
+            </button>
+          </div>
           <div class="container">
             <div class="botones-tamanos" id="tour-btn-tamanios">
               <button onclick="canvasManager.agregarEspacio(4, 4);">
@@ -159,6 +181,15 @@
         </div>
 
         <div class="formularios3 hidden" id="form-3">
+          <div class="div-help">
+            <button
+              class="btn-help"
+              onclick="restartTour(3);"
+              title="Make this tour again"
+            >
+              <i class="fas fa-question"></i>
+            </button>
+          </div>
           <div class="botones-colores" id="tour-btn-colores">
             <div
               class="btn-color"

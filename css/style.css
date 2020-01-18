@@ -149,6 +149,7 @@ body {
 }
 
 .formulario1 {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -163,13 +164,13 @@ body {
   text-align: center;
 }
 
-/* .formularios2 {
-  height: inherit;
+.formularios2 {
+  position: relative;
 }
 
 .formularios3 {
-  height: inherit;
-} */
+  position: relative;
+}
 /********** End Formulario ***********/
 
 .botones-tamanos {
@@ -319,4 +320,18 @@ canvas {
 
 .brown {
   background-color: #352117;
+}
+
+.div-help {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.btn-help {
+  background: #fff;
+  color: #a61e22;
+  border: 2px solid #a61e22;
+  border-radius: 50%;
+  font-size: 1.3em;
 }

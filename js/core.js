@@ -4,18 +4,25 @@ var tour1 = new Tour({
   steps: [
     {
       element: "#tour-wizard",
-      title: "Step 1",
-      content: "Content"
+      title: "Steps",
+      content: "4 Steps to customize your tray as you want"
     },
     {
       element: "#form-1",
-      title: "Step 2",
-      content: "Content"
+      title: "Choose Sizes",
+      content:
+        "First, you have to choose the Width, Height, and Depth or your tray"
     },
     {
       element: "#tour-btn-next-form1",
-      title: "Step 3",
-      content: "Content"
+      title: "Next Step",
+      content:
+        "When you are done click here, later you can come back here to change any size"
+    },
+    {
+      element: "#tour-btn-help",
+      title: "Help",
+      content: "If you need to see these hints again click here"
     }
   ]
 });
@@ -26,33 +33,37 @@ var tour2 = new Tour({
   steps: [
     {
       element: "#tour-btn-tamanios",
-      title: "Step 1",
-      content: "Content"
+      title: "Customize",
+      content:
+        "Here you can choose any size of space to put it on the tray, then you can move it as you want"
     },
     {
       element: "#tour-resumen",
-      title: "Step 2",
-      content: "Content"
+      title: "Spaces to fill",
+      content: "Here you will see how many spaces left to complete your tray"
     },
     {
       element: "#tour-btn-functions",
-      title: "Step 3",
-      content: "Content"
+      title: "Functions",
+      content:
+        "If you want to copy any space click on the first button, the second will delete the space selected"
     },
     {
       element: "#canvas",
-      title: "Step 4",
-      content: "Content"
+      title: "Tray",
+      content:
+        "This is your tray, select, move any space, remember spaces can't overlap each other"
     },
     {
       element: "#tour-prices",
-      title: "Step 5",
-      content: "Content"
+      title: "Prices",
+      content:
+        "When you add any space, here you will see the price for each one and the total"
     },
     {
       element: "#tour-btn-next-form2",
-      title: "Step 5",
-      content: "Content"
+      title: "Next Step",
+      content: "When you are done click here, you can come back any time"
     }
   ]
 });
@@ -63,24 +74,31 @@ var tour3 = new Tour({
   steps: [
     {
       element: "#tour-btn-colores",
-      title: "Step 1",
-      content: "Content"
+      title: "Change color",
+      content:
+        "Once you finish your tray we will show you the 3d version, you can change colors with these buttons"
     },
     {
       element: "#canvas-3d",
-      title: "Step 2",
-      content: "Content"
+      title: "3D versión of your tray",
+      content: "You can move your tray with the mouse"
     },
     {
       element: "#tour-btn-next-form3",
-      title: "Step 3",
-      content: "Content"
+      title: "Next Step",
+      content: "Then the final step"
     }
   ]
 });
 
 tour1.init();
 tour1.start();
+
+function restartTour(tour) {
+  if (tour === 1) tour1.restart();
+  if (tour === 2) tour2.restart();
+  if (tour === 3) tour3.restart();
+}
 
 /************/
 const PIXEL_SIZE = 24;
