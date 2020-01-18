@@ -1,3 +1,87 @@
+var tour1 = new Tour({
+  name: "tour1",
+  backdrop: true,
+  steps: [
+    {
+      element: "#tour-wizard",
+      title: "Step 1",
+      content: "Content"
+    },
+    {
+      element: "#form-1",
+      title: "Step 2",
+      content: "Content"
+    },
+    {
+      element: "#tour-btn-next-form1",
+      title: "Step 3",
+      content: "Content"
+    }
+  ]
+});
+
+var tour2 = new Tour({
+  name: "tour2",
+  backdrop: true,
+  steps: [
+    {
+      element: "#tour-btn-tamanios",
+      title: "Step 1",
+      content: "Content"
+    },
+    {
+      element: "#tour-resumen",
+      title: "Step 2",
+      content: "Content"
+    },
+    {
+      element: "#tour-btn-functions",
+      title: "Step 3",
+      content: "Content"
+    },
+    {
+      element: "#canvas",
+      title: "Step 4",
+      content: "Content"
+    },
+    {
+      element: "#tour-prices",
+      title: "Step 5",
+      content: "Content"
+    },
+    {
+      element: "#tour-btn-next-form2",
+      title: "Step 5",
+      content: "Content"
+    }
+  ]
+});
+
+var tour3 = new Tour({
+  name: "tour3",
+  backdrop: true,
+  steps: [
+    {
+      element: "#tour-btn-colores",
+      title: "Step 1",
+      content: "Content"
+    },
+    {
+      element: "#canvas-3d",
+      title: "Step 2",
+      content: "Content"
+    },
+    {
+      element: "#tour-btn-next-form3",
+      title: "Step 3",
+      content: "Content"
+    }
+  ]
+});
+
+tour1.init();
+tour1.start();
+
 /************/
 const PIXEL_SIZE = 24;
 const _closeSize = PIXEL_SIZE * 0.4;
@@ -520,6 +604,16 @@ var tabManager = (function() {
       tabActual++;
       $("#form-" + tabActual).removeClass("hidden");
       $("#item-" + tabActual).addClass("activo");
+
+      if (tabActual === 2) {
+        tour2.init();
+        tour2.start();
+      }
+
+      if (tabActual === 3) {
+        tour3.init();
+        tour3.start();
+      }
     },
 
     anteriorTab() {

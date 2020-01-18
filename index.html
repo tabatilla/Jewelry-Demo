@@ -14,11 +14,15 @@
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
     />
     <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="modules/bootstrapTour/bootstrap-tour.min.css"
+    />
     <title>Create your jewelry box</title>
   </head>
   <body>
     <div class="container">
-      <div class="wizard">
+      <div class="wizard" id="tour-wizard">
         <div class="linea"></div>
         <div class="navegacion">
           <div id="item-1" class="nav-item activo">
@@ -66,6 +70,7 @@
 
           <div class="botones-footer">
             <button
+              id="tour-btn-next-form1"
               onclick="canvasManager.crearCanvas(); tabManager.siguienteTab();"
             >
               Next
@@ -74,7 +79,7 @@
         </div>
         <div class="formularios2 hidden" id="form-2">
           <div class="container">
-            <div class="botones-tamanos">
+            <div class="botones-tamanos" id="tour-btn-tamanios">
               <button onclick="canvasManager.agregarEspacio(4, 4);">
                 <img src="icons/glasses.svg" alt="glasses" /> 4x4
               </button>
@@ -99,10 +104,10 @@
               </button>
             </div>
             <div>
-              <div class="resumen">
+              <div class="resumen" id="tour-resumen">
                 <span>Spaces to fill : </span> <span id="resumen"></span>
               </div>
-              <div class="botones-funciones">
+              <div class="botones-funciones" id="tour-btn-functions">
                 <button onclick="canvasManager.rotarEspacio();" title="Rotate">
                   <i class="fas fa-sync-alt"></i>
                 </button>
@@ -113,7 +118,7 @@
             </div>
             <div class="row">
               <div class="col-md-9" id="canvas"></div>
-              <div class="col-md-2">
+              <div class="col-md-2" id="tour-prices">
                 <table id="app-4" class="table table-striped">
                   <thead>
                     <tr>
@@ -144,7 +149,7 @@
                 </table>
               </div>
             </div>
-            <div class="botones-footer">
+            <div class="botones-footer" id="tour-btn-next-form2">
               <button class="btn-atras">Back</button>
               <button class="btn-siguiente" data-tipo="renderizar3d">
                 Next
@@ -154,7 +159,7 @@
         </div>
 
         <div class="formularios3 hidden" id="form-3">
-          <div class="botones-colores">
+          <div class="botones-colores" id="tour-btn-colores">
             <div
               class="btn-color"
               onclick="renderManager.cambiarColor(0x1c2744);"
@@ -206,7 +211,7 @@
             </div>
           </div>
           <div id="canvas-3d"></div>
-          <div class="botones-footer">
+          <div class="botones-footer" id="tour-btn-next-form3">
             <button class="btn-atras">Back</button>
             <a id="downloadTray" onclick="renderManager.getImage();">
               Download
@@ -482,6 +487,7 @@
   <script src="https://kit.fontawesome.com/8d49056d24.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="modules/bootstrapTour/bootstrap-tour.min.js"></script>
   <script src="js/core.js"></script>
   <script src="js/OrbitControls.js"></script>
   <script src="js/renderizar.js"></script>
