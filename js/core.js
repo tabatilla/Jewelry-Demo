@@ -383,6 +383,32 @@ var canvasManager = (function(_callbackImpresion) {
       resizeCanvas(_ancho * PIXEL_SIZE + 1, _alto * PIXEL_SIZE + 1);
     },
 
+    crearCanvasTest: function() {
+      _ancho = 17;
+      _ancho_f = "123";
+      _alto = 15;
+      _alto_f = "123";
+      _height = 3;
+      _height_f = "123";
+
+      crearGrilla();
+      resizeCanvas(_ancho * PIXEL_SIZE + 1, _alto * PIXEL_SIZE + 1);
+    },
+
+    resize: function() {
+      const variacion = 1;
+
+      for (let i = 0; i < espacios.length; i++) {
+        let celda = espacios[i];
+        if (celda.x + celda.w + variacion === _ancho) {
+          celda.w += variacion;
+        }
+        if (celda.y + celda.h + variacion === _alto) {
+          celda.h += variacion;
+        }
+      }
+    },
+
     getTablero: function() {
       return tablero;
     },
