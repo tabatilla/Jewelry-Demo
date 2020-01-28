@@ -88,11 +88,6 @@
             >
               Next
             </button>
-            <!-- <button
-              onclick="canvasManager.crearCanvasTest(); tabManager.siguienteTab();"
-            >
-              Siguiente
-            </button> -->
           </div>
         </div>
         <div class="formularios2 hidden" id="form-2">
@@ -122,7 +117,13 @@
               <button onclick="canvasManager.agregarEspacio(8, 3);">
                 <img src="icons/necklace.svg" alt="" /> 8x3
               </button>
-              <button data-toggle="modal" data-target="#myModal">Custom</button>
+              <button
+                data-toggle="modal"
+                data-target="#myModal"
+                id="tour-btn-custom"
+              >
+                Custom
+              </button>
               <button onclick="canvasManager.agregarEspacioRing(3, 2);">
                 <img src="icons/diamond-ring.svg" alt="ring" /> 3x2Ring
               </button>
@@ -146,34 +147,39 @@
             <div class="row">
               <div class="col-md-9" id="canvas"></div>
               <div class="col-md-2" id="tour-prices">
-                <table id="app-4" class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th>Quantity</th>
-                      <th>Box</th>
-                      <th>Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="value in espaciosAgrupados">
-                      <td>{{ value.count }}</td>
-                      <td>{{ getName(value) }}</td>
-                      <td>
-                        {{ calcularPrecio(value) }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td>Just Price:</td>
-                      <td>$89.50</td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td>Total:</td>
-                      <td>{{ calcularTotal() }}</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <div id="app-4">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr v-for="value in preciosBase">
+                        <td>{{ value.title }}</td>
+                        <td>${{ value.price }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Quantity</th>
+                        <th>Box</th>
+                        <th>Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="value in espaciosAgrupados">
+                        <td>{{ value.count }}</td>
+                        <td>{{ getName(value) }}</td>
+                        <td>
+                          {{ calcularPrecio(value) }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>Total:</td>
+                        <td>{{ calcularTotal() }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
             <div class="botones-footer" id="tour-btn-next-form2">

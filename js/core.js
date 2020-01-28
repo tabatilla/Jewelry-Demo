@@ -38,6 +38,11 @@ var tour2 = new Tour({
         "Here you can choose any size of space to put it on the tray, then you can move it as you want"
     },
     {
+      element: "#tour-btn-custom",
+      title: "Customize your spaces",
+      content: "You can create your own spaces with sizes you want"
+    },
+    {
       element: "#tour-resumen",
       title: "Spaces to fill",
       content: "Here you will see how many spaces left to complete your tray"
@@ -188,6 +193,7 @@ var canvasManager = (function(_callbackImpresion) {
 
   var tablero = [],
     espacios = [];
+
   var isDragging = false,
     indexActual = -1,
     celdaActual,
@@ -197,7 +203,12 @@ var canvasManager = (function(_callbackImpresion) {
   var app4 = new Vue({
     el: "#app-4",
     data: {
-      espacios: espacios
+      espacios: espacios,
+      preciosBase: [
+        { title: "Base Price", price: 89.5 },
+        { title: "Width", price: 0 },
+        { title: "Depth", price: 0 }
+      ]
     },
     methods: {
       calcularPrecio: function(espacio) {
@@ -214,7 +225,6 @@ var canvasManager = (function(_callbackImpresion) {
       },
 
       calcularTotal: function() {
-        let justPrice = 89.5;
         let res = 0;
         for (let i = 0; i < this.espacios.length; i++) {
           res +=
@@ -223,7 +233,10 @@ var canvasManager = (function(_callbackImpresion) {
             (this.espacios[i].tipo === 1 ? PRECIO_CELDA : PRECIO_CELDA_RING);
         }
 
-        res += justPrice;
+        //Precios Base
+        for (let i = 0; i < this.preciosBase.length; i++) {
+          res += this.preciosBase[i].price;
+        }
 
         return `$${res}`;
       }
@@ -370,10 +383,10 @@ var canvasManager = (function(_callbackImpresion) {
 
     saveTamanio: function(tipo, value) {
       if (tipo === "ancho") _ancho = parseInt(value);
-      if (tipo === "ancho_f") _ancho_f = parseInt(value);
+      if (tipo === "ancho_f") _ancho_f = value;
       if (tipo === "alto") _alto = parseInt(value);
       if (tipo === "alto_f") _alto_f = value;
-      if (tipo === "height") _height = value;
+      if (tipo === "height") _height = parseInt(value);
       if (tipo === "height_f") _height_f = value;
     },
 
@@ -530,7 +543,7 @@ var canvasManager = (function(_callbackImpresion) {
     },
 
     comprobarValores() {
-      return _ancho && _alto && _height && _ancho_f && _alto_f && _height_f;
+      return _ancho && _alto && _height;
     },
 
     finalizar() {
