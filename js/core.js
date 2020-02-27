@@ -115,7 +115,7 @@ const PRECIO_CELDA_RING = 2;
 //Tipo 1 = normal
 //tipo 2 = ring
 var Celda = (function() {
-  function Celda(x, y, w, h, color, tipo) {
+  function Celda(x, y, w, h, color, tipo, price, custom) {
     this.x = x;
     this.y = y;
     this.w = w;
@@ -123,8 +123,11 @@ var Celda = (function() {
     this.color = color;
     this.tipo = tipo || 1;
     this.selected = false;
+    this.price = price || 0;
+    this.custom = custom || false;
   }
 
+  // Función para saber si se hizo click dentro o fuera de la celda.
   Celda.prototype.click = function(hitpos) {
     if (
       hitpos.x > this.x * PIXEL_SIZE &&
@@ -137,6 +140,7 @@ var Celda = (function() {
     return false;
   };
 
+  // Función para saber si se hizo click dentro o fuera de la x para cerrar.
   Celda.prototype.clickCloser = function(hitpos) {
     if (
       hitpos.x > this.x * PIXEL_SIZE + this.w * PIXEL_SIZE - _closeSize &&
@@ -149,13 +153,16 @@ var Celda = (function() {
     return false;
   };
 
+  // Función para saber si una caja está encima (Overlap) de la otra
   Celda.prototype.overlap = function(celda) {
     var r1 = {
       bl: {
+        //bottom left
         x: this.x * PIXEL_SIZE,
         y: this.y * PIXEL_SIZE + this.h * PIXEL_SIZE
       },
       tr: {
+        //top right
         x: this.x * PIXEL_SIZE + this.w * PIXEL_SIZE,
         y: this.y * PIXEL_SIZE
       }
@@ -182,6 +189,7 @@ var Celda = (function() {
 })();
 
 var canvasManager = (function(_callbackImpresion) {
+  //Variables que almacenan lo que el usuario ha escogido en el primer formulario.
   let _ancho = 0,
     _alto = 0, //depth
     _height = 0;
@@ -191,8 +199,8 @@ var canvasManager = (function(_callbackImpresion) {
   _alto_f = "";
   _height_f = "";
 
-  var tablero = [],
-    espacios = [];
+  var tablero = [], //Grid de fondo
+    espacios = []; //Cajas
 
   var isDragging = false,
     indexActual = -1,
@@ -213,24 +221,30 @@ var canvasManager = (function(_callbackImpresion) {
     methods: {
       calcularPrecio: function(espacio) {
         if (espacio.tipo === 1) {
-          return `$${espacio.w * espacio.h * espacio.count * PRECIO_CELDA}`;
+          return `$${espacio.price * espacio.count * PRECIO_CELDA}`;
         }
-        return `$${espacio.w * espacio.h * espacio.count * PRECIO_CELDA_RING}`;
+        return `$${espacio.price * espacio.count * PRECIO_CELDA_RING}`;
       },
 
       getName: function(espacio) {
         return (
-          "" + espacio.w + "x" + espacio.h + (espacio.tipo === 2 ? " Ring" : "")
+          "" +
+          espacio.w +
+          "x" +
+          espacio.h +
+          (espacio.tipo === 2 ? " Ring" : "") +
+          (espacio.custom ? " Custom" : "")
         );
       },
 
       calcularTotal: function() {
         let res = 0;
         for (let i = 0; i < this.espacios.length; i++) {
-          res +=
-            this.espacios[i].w *
-            this.espacios[i].h *
-            (this.espacios[i].tipo === 1 ? PRECIO_CELDA : PRECIO_CELDA_RING);
+          // res +=
+          //   this.espacios[i].w *
+          //   this.espacios[i].h *
+          //   (this.espacios[i].tipo === 1 ? PRECIO_CELDA : PRECIO_CELDA_RING);
+          res += this.espacios[i].price;
         }
 
         //Precios Base
@@ -244,13 +258,16 @@ var canvasManager = (function(_callbackImpresion) {
     computed: {
       espaciosAgrupados: function() {
         var map = this.espacios.reduce(function(obj, b) {
-          const key = "" + b.w + "x" + b.h + "-" + b.tipo;
+          const key =
+            "" + b.w + "x" + b.h + "-" + b.tipo + (b.custom ? "c" : "");
 
           obj[key] = {
             count: obj[key] ? ++obj[key].count : 0 || 1,
             tipo: b.tipo,
             w: b.w,
-            h: b.h
+            h: b.h,
+            price: b.price,
+            custom: b.custom
           };
           return obj;
         }, {});
@@ -259,6 +276,7 @@ var canvasManager = (function(_callbackImpresion) {
     }
   });
 
+  //Crear la grilla del fondo
   function crearGrilla() {
     for (let i = 0; i < _ancho; i++) {
       for (let j = 0; j < _alto; j++) {
@@ -275,11 +293,13 @@ var canvasManager = (function(_callbackImpresion) {
     }
   }
 
+  // Función para poner al frente la caja
   function putOnTop(index) {
     espacios.splice(index, 1);
     espacios.push(celdaActual);
   }
 
+  // Cuando le dan click en la equis para cerrar y elimina la caja
   function clearEspacio(index) {
     if (index != null) {
       Swal.fire({
@@ -318,6 +338,7 @@ var canvasManager = (function(_callbackImpresion) {
     return color(rdmColor[0], rdmColor[1], rdmColor[2], 99.99);
   }
 
+  // Se resta el tablero menos las cajas que se han creado
   function calcularEspacioRestante() {
     let res = 0;
     for (let i = 0; i < espacios.length; i++) {
@@ -327,8 +348,8 @@ var canvasManager = (function(_callbackImpresion) {
     return _ancho * _alto - res;
   }
 
-  function agregarEspacio(x, y, w, h, tipo) {
-    espacios.push(new Celda(x, y, w, h, getColor(), tipo));
+  function agregarEspacio(x, y, w, h, tipo, price, custom) {
+    espacios.push(new Celda(x, y, w, h, getColor(), tipo, price, custom));
 
     //calcular espacios restantes
     _callbackImpresion(calcularEspacioRestante());
@@ -361,7 +382,7 @@ var canvasManager = (function(_callbackImpresion) {
         return;
       }
 
-      agregarEspacio(0, 0, parseInt(w), parseInt(h), 1);
+      agregarEspacio(0, 0, parseInt(w), parseInt(h), 1, 0, true);
     },
 
     crearEspacioCustomRing: function() {
@@ -378,7 +399,7 @@ var canvasManager = (function(_callbackImpresion) {
         return;
       }
 
-      agregarEspacio(0, 0, parseInt(w), parseInt(h), 2);
+      agregarEspacio(0, 0, parseInt(w), parseInt(h), 2, 0, true);
     },
 
     saveTamanio: function(tipo, value) {
@@ -408,6 +429,7 @@ var canvasManager = (function(_callbackImpresion) {
       resizeCanvas(_ancho * PIXEL_SIZE + 1, _alto * PIXEL_SIZE + 1);
     },
 
+    // Se hace resize cuando sobra una caja
     resize: function() {
       const variacion = 1;
 
@@ -431,9 +453,10 @@ var canvasManager = (function(_callbackImpresion) {
     },
 
     clickEspacio: function() {
-      var m = createVector(mouseX, mouseY);
+      var m = createVector(mouseX, mouseY); // Coordenadas del mouse al hacer clic
       indexActual = -1;
 
+      // Reconoce en que celda se ha hecho clic
       espacios.forEach(function(r, i) {
         if (r.click(m)) {
           if (r.clickCloser(m)) {
@@ -452,12 +475,14 @@ var canvasManager = (function(_callbackImpresion) {
         espacios[i].selected = indexActual == i;
       });
 
+      // Hace la acción de eliminar la caja cuando se ha hecho click en la equis
       if (isClosing && indexActual == indexClose) {
         isDragging = false;
         clearEspacio(indexActual);
         return;
       }
 
+      // Si se hace drag se pone la caja adelante
       if (isDragging) {
         putOnTop(indexActual);
       }
@@ -473,6 +498,7 @@ var canvasManager = (function(_callbackImpresion) {
         );
         vec.set(m).add(clickOffset);
 
+        // Para que la caja arrastrada avance cuadrado por cuadrado
         let newx = parseInt(vec.x / PIXEL_SIZE);
         let newy = parseInt(vec.y / PIXEL_SIZE);
 
@@ -491,12 +517,12 @@ var canvasManager = (function(_callbackImpresion) {
       isDragging = false;
     },
 
-    agregarEspacio(w, h) {
-      agregarEspacio(0, 0, w, h, 1);
+    agregarEspacio(w, h, p) {
+      agregarEspacio(0, 0, w, h, 1, p, false);
     },
 
-    agregarEspacioRing(w, h) {
-      agregarEspacio(0, 0, w, h, 2);
+    agregarEspacioRing(w, h, p) {
+      agregarEspacio(0, 0, w, h, 2, p, false);
     },
 
     rotarEspacio() {
@@ -507,7 +533,15 @@ var canvasManager = (function(_callbackImpresion) {
 
     duplicar() {
       if (celdaActual) {
-        agregarEspacio(0, 0, celdaActual.w, celdaActual.h, celdaActual.tipo);
+        agregarEspacio(
+          0,
+          0,
+          celdaActual.w,
+          celdaActual.h,
+          celdaActual.tipo,
+          celdaActual.price,
+          celdaActual.custom
+        );
       }
     },
 
