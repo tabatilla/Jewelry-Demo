@@ -323,7 +323,7 @@ var canvasManager = (function(_callbackImpresion) {
   function getColor() {
     var colors = [
       [354, 67, 85],
-      [240, 246, 159],
+      [(240, 246, 159)],
       [111, 47, 76],
       [182, 44, 89],
       [145, 57, 88],
@@ -445,18 +445,36 @@ var canvasManager = (function(_callbackImpresion) {
       resizeCanvas(_ancho * PIXEL_SIZE + 1, _alto * PIXEL_SIZE + 1);
     },
 
-    // Se hace resize cuando sobra una caja
+    // Se hace resize cuando sobra un espacio de altura 1 al final del tablero
     resize: function() {
       const variacion = 1;
+      let hayOverlapping = false;
+
+      //No se puede hacer resize cuando el tablero es menor de 10
+      if (_alto < 10) {
+        return;
+      }
+
+      //Se crea una celda vacía al final del tablero y se comprueba que no haya overlapping
+      let nuevaCelda = new Celda(
+        0,
+        _alto - variacion,
+        _ancho,
+        variacion,
+        getColor()
+      );
 
       for (let i = 0; i < espacios.length; i++) {
-        let celda = espacios[i];
-        if (celda.x + celda.w + variacion === _ancho) {
-          celda.w += variacion;
+        if (nuevaCelda.overlap(espacios[i])) {
+          hayOverlapping = true;
+          break;
         }
-        if (celda.y + celda.h + variacion === _alto) {
-          celda.h += variacion;
-        }
+      }
+
+      if (!hayOverlapping) {
+        _alto = _alto - variacion;
+        resizeCanvas(_ancho * PIXEL_SIZE + 1, _alto * PIXEL_SIZE + 1);
+        _callbackImpresion(calcularEspacioRestante());
       }
     },
 
