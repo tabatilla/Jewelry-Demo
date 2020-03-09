@@ -323,7 +323,7 @@ var canvasManager = (function(_callbackImpresion) {
   function getColor() {
     var colors = [
       [354, 67, 85],
-      [(240, 246, 159)],
+      [240, 246, 159],
       [111, 47, 76],
       [182, 44, 89],
       [145, 57, 88],
@@ -448,34 +448,63 @@ var canvasManager = (function(_callbackImpresion) {
     // Se hace resize cuando sobra un espacio de altura 1 al final del tablero
     resize: function() {
       const variacion = 1;
-      let hayOverlapping = false;
+      let cajasTemp = [];
+      let overLapp = [false, false, false, false]; // top, rigth, bottom, left
 
       //No se puede hacer resize cuando el tablero es menor de 10
-      if (_alto < 10) {
+      if (_alto < 10 || _ancho < 10) {
         return;
       }
 
-      //Se crea una celda vacía al final del tablero y se comprueba que no haya overlapping
-      let nuevaCelda = new Celda(
-        0,
-        _alto - variacion,
-        _ancho,
-        variacion,
-        getColor()
-      );
+      // Se crean cajas en los bordes del tablero y se comprueba que no haya overlapping
+      cajasTemp.push(new Celda(0, 0, _ancho, variacion, getColor())); // Top
+      cajasTemp.push(
+        new Celda(_ancho - variacion, 0, variacion, _alto, getColor())
+      ); //Right
+      cajasTemp.push(
+        new Celda(0, _alto - variacion, _ancho, variacion, getColor())
+      ); //Bottom
+      cajasTemp.push(new Celda(0, 0, variacion, _alto, getColor())); // Left
 
-      for (let i = 0; i < espacios.length; i++) {
-        if (nuevaCelda.overlap(espacios[i])) {
-          hayOverlapping = true;
-          break;
+      for (let i = 0; i < cajasTemp.length; i++) {
+        for (let j = 0; j < espacios.length; j++) {
+          if (cajasTemp[i].overlap(espacios[j])) {
+            overLapp[i] = true;
+            break;
+          }
         }
       }
 
-      if (!hayOverlapping) {
+      // Si el resize se tiene que hacer desde el top o left, todos los elementos deben moverse de
+      // acuerdo a la variación (-1) dependiendo si es arriba o izquierda
+      if (!overLapp[0]) {
+        // top
+        for (let i = 0; i < espacios.length; i++) {
+          espacios[i].y = espacios[i].y - variacion;
+        }
+
         _alto = _alto - variacion;
-        resizeCanvas(_ancho * PIXEL_SIZE + 1, _alto * PIXEL_SIZE + 1);
-        _callbackImpresion(calcularEspacioRestante());
       }
+
+      if (!overLapp[1]) {
+        _ancho = _ancho - variacion; // right
+      }
+
+      if (!overLapp[2]) {
+        _alto = _alto - variacion; // bottom
+      }
+
+      if (!overLapp[3]) {
+        // left
+        for (let i = 0; i < espacios.length; i++) {
+          espacios[i].x = espacios[i].x - variacion;
+        }
+
+        _ancho = _ancho - variacion;
+      }
+
+      resizeCanvas(_ancho * PIXEL_SIZE + 1, _alto * PIXEL_SIZE + 1);
+      _callbackImpresion(calcularEspacioRestante());
     },
 
     getTablero: function() {
