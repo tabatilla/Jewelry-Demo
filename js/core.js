@@ -108,14 +108,12 @@ function restartTour(tour) {
 /************/
 const PIXEL_SIZE = 24;
 const _closeSize = PIXEL_SIZE * 0.4;
-const PRECIO_CELDA = 1;
-const PRECIO_CELDA_RING = 2;
 
 //Todas las celdas son cuadradas
 //Tipo 1 = normal
 //tipo 2 = ring
 var Celda = (function() {
-  function Celda(x, y, w, h, color, tipo, price, custom) {
+  function Celda(x, y, w, h, color, tipo, price, custom, text) {
     this.x = x;
     this.y = y;
     this.w = w;
@@ -125,6 +123,7 @@ var Celda = (function() {
     this.selected = false;
     this.price = price || 0;
     this.custom = custom || false;
+    this.text = text || "";
   }
 
   // Función para saber si se hizo click dentro o fuera de la celda.
@@ -220,30 +219,20 @@ var canvasManager = (function(_callbackImpresion) {
     },
     methods: {
       calcularPrecio: function(espacio) {
-        if (espacio.tipo === 1) {
-          return `$${espacio.price * espacio.count * PRECIO_CELDA}`;
-        }
-        return `$${espacio.price * espacio.count * PRECIO_CELDA_RING}`;
+        return `$${this.redondear(espacio.price * espacio.count)}`;
       },
 
       getName: function(espacio) {
-        return (
-          "" +
-          espacio.w +
-          "x" +
-          espacio.h +
-          (espacio.tipo === 2 ? " Ring" : "") +
-          (espacio.custom ? " Custom" : "")
-        );
+        if (espacio.custom) {
+          return espacio.text + " " + espacio.w + "x" + espacio.h;
+        } else {
+          return espacio.text;
+        }
       },
 
       calcularTotal: function() {
         let res = 0;
         for (let i = 0; i < this.espacios.length; i++) {
-          // res +=
-          //   this.espacios[i].w *
-          //   this.espacios[i].h *
-          //   (this.espacios[i].tipo === 1 ? PRECIO_CELDA : PRECIO_CELDA_RING);
           res += this.espacios[i].price;
         }
 
@@ -253,13 +242,21 @@ var canvasManager = (function(_callbackImpresion) {
         }
 
         return `$${res}`;
+      },
+
+      redondear: function(amount) {
+        return Math.round((amount + Number.EPSILON) * 100) / 100;
       }
     },
     computed: {
       espaciosAgrupados: function() {
         var map = this.espacios.reduce(function(obj, b) {
-          const key =
-            "" + b.w + "x" + b.h + "-" + b.tipo + (b.custom ? "c" : "");
+          let key = "";
+          if (b.custom) {
+            key = b.text + " " + b.w + "x" + b.h;
+          } else {
+            key = b.text;
+          }
 
           obj[key] = {
             count: obj[key] ? ++obj[key].count : 0 || 1,
@@ -267,7 +264,8 @@ var canvasManager = (function(_callbackImpresion) {
             w: b.w,
             h: b.h,
             price: b.price,
-            custom: b.custom
+            custom: b.custom,
+            text: b.text
           };
           return obj;
         }, {});
@@ -348,8 +346,8 @@ var canvasManager = (function(_callbackImpresion) {
     return _ancho * _alto - res;
   }
 
-  function agregarEspacio(x, y, w, h, tipo, price, custom) {
-    espacios.push(new Celda(x, y, w, h, getColor(), tipo, price, custom));
+  function agregarEspacio(x, y, w, h, tipo, price, custom, text) {
+    espacios.push(new Celda(x, y, w, h, getColor(), tipo, price, custom, text));
 
     //calcular espacios restantes
     _callbackImpresion(calcularEspacioRestante());
@@ -368,7 +366,7 @@ var canvasManager = (function(_callbackImpresion) {
   }
 
   return {
-    crearEspacioCustom: function() {
+    crearEspacioCustom: function(price) {
       var w = document.getElementById("ancho").value;
       var h = document.getElementById("alto").value;
 
@@ -382,10 +380,19 @@ var canvasManager = (function(_callbackImpresion) {
         return;
       }
 
-      agregarEspacio(0, 0, parseInt(w), parseInt(h), 1, 0, true);
+      agregarEspacio(
+        0,
+        0,
+        parseInt(w),
+        parseInt(h),
+        1,
+        price * w * h,
+        true,
+        "Custom"
+      );
     },
 
-    crearEspacioCustomRing: function() {
+    crearEspacioCustomRing: function(price) {
       var w = document.getElementById("anchoRing").value;
       var h = document.getElementById("altoRing").value;
 
@@ -399,7 +406,16 @@ var canvasManager = (function(_callbackImpresion) {
         return;
       }
 
-      agregarEspacio(0, 0, parseInt(w), parseInt(h), 2, 0, true);
+      agregarEspacio(
+        0,
+        0,
+        parseInt(w),
+        parseInt(h),
+        2,
+        price * w * h,
+        true,
+        "Custom Ring"
+      );
     },
 
     saveTamanio: function(tipo, value) {
@@ -517,12 +533,12 @@ var canvasManager = (function(_callbackImpresion) {
       isDragging = false;
     },
 
-    agregarEspacio(w, h, p) {
-      agregarEspacio(0, 0, w, h, 1, p, false);
+    agregarEspacio(w, h, p, t) {
+      agregarEspacio(0, 0, w, h, 1, p, false, t);
     },
 
-    agregarEspacioRing(w, h, p) {
-      agregarEspacio(0, 0, w, h, 2, p, false);
+    agregarEspacioRing(w, h, p, t) {
+      agregarEspacio(0, 0, w, h, 2, p, false, t);
     },
 
     rotarEspacio() {
@@ -540,7 +556,8 @@ var canvasManager = (function(_callbackImpresion) {
           celdaActual.h,
           celdaActual.tipo,
           celdaActual.price,
-          celdaActual.custom
+          celdaActual.custom,
+          celdaActual.text
         );
       }
     },
@@ -634,6 +651,7 @@ function drawGrilla() {
     rect(tab[i].x, tab[i].y, tab[i].w, tab[i].h);
   }
 }
+
 function drawEspacios() {
   var esp = canvasManager.getEspacios();
   for (let i = 0; i < esp.length; i++) {
@@ -650,6 +668,24 @@ function drawEspacios() {
       esp[i].w * PIXEL_SIZE,
       esp[i].h * PIXEL_SIZE
     );
+
+    // Texto
+    textSize(10);
+    strokeWeight(1);
+    fill(51);
+    if (esp[i].w - esp[i].x <= 2 && esp[i].text.length > 6) {
+      //Cuando no tiene espacio corta las palabras y las pone una sobre otra
+      let words = esp[i].text.split(" ");
+      for (let j = 0; j < words.length; j++) {
+        text(
+          words[j],
+          esp[i].x * PIXEL_SIZE + 10,
+          esp[i].y * PIXEL_SIZE + 15 * (j + 1)
+        );
+      }
+    } else {
+      text(esp[i].text, esp[i].x * PIXEL_SIZE + 10, esp[i].y * PIXEL_SIZE + 15);
+    }
 
     //Dibujar una cruz
     //Se le suma y resta 2 para que no esté sobre el margen del rectángulo

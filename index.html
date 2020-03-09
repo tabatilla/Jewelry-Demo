@@ -102,20 +102,30 @@
           </div>
           <div class="container">
             <div class="botones-tamanos" id="tour-btn-tamanios">
-              <button onclick="canvasManager.agregarEspacio(4, 4, 50);">
+              <button
+                onclick="canvasManager.agregarEspacio(4, 4, 1.5, 'Glasses');"
+              >
                 <img src="icons/glasses.svg" alt="glasses" /> 4x4
               </button>
-              <button onclick="canvasManager.agregarEspacio(12, 6, 51);">
+              <button
+                onclick="canvasManager.agregarEspacio(12, 6, 2.8, 'Watch');"
+              >
                 <img src="icons/wristwatch.svg" alt="watch" /> 12x6
               </button>
-              <button onclick="canvasManager.agregarEspacio(4, 14, 52);">
+              <button
+                onclick="canvasManager.agregarEspacio(4, 14, 1.4, 'Earrings');"
+              >
                 <img src="icons/earrings.svg" alt="earrings" /> 4x14
               </button>
-              <button onclick="canvasManager.agregarEspacio(6, 10, 53);">
+              <button
+                onclick="canvasManager.agregarEspacio(6, 10, 2.8, 'Bracelet');"
+              >
                 <img src="icons/glow.svg" alt="bracelet" /> 6x10
               </button>
-              <button onclick="canvasManager.agregarEspacio(8, 3, 54);">
-                <img src="icons/necklace.svg" alt="" /> 8x3
+              <button
+                onclick="canvasManager.agregarEspacio(8, 3, 1.3, 'Necklace');"
+              >
+                <img src="icons/necklace.svg" alt="necklace" /> 8x3
               </button>
               <button
                 data-toggle="modal"
@@ -124,8 +134,10 @@
               >
                 Custom
               </button>
-              <button onclick="canvasManager.agregarEspacioRing(3, 2, 60);">
-                <img src="icons/diamond-ring.svg" alt="ring" /> 3x2Ring
+              <button
+                onclick="canvasManager.agregarEspacioRing(3, 2, 1.8, 'Ring');"
+              >
+                <img src="icons/diamond-ring.svg" alt="ring" /> 3x2 Ring
               </button>
               <button data-toggle="modal" data-target="#myModalRing">
                 Custom Ring
@@ -312,10 +324,11 @@
               </div>
             </div>
             <div class="modal-footer">
+              <!-- En la función crearEspacioCustom se envía el precio por pulgada cuadrada -->
               <button
                 class="btn-modal"
                 data-dismiss="modal"
-                onclick="canvasManager.crearEspacioCustom();"
+                onclick="canvasManager.crearEspacioCustom(3.9);"
               >
                 Create
               </button>
@@ -366,10 +379,11 @@
               </div>
             </div>
             <div class="modal-footer">
+              <!-- En la función crearEspacioCustomRing se envía el precio por pulgada cuadrada -->
               <button
                 class="btn-modal"
                 data-dismiss="modal"
-                onclick="canvasManager.crearEspacioCustomRing();"
+                onclick="canvasManager.crearEspacioCustomRing(0.3);"
               >
                 Create
               </button>
