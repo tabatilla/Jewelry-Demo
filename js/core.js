@@ -665,10 +665,13 @@ function imprimirMensajeEspaciosVacios(numero) {
   }
 }
 /************/
-
 function setup() {
   var myCanvas = createCanvas();
   myCanvas.parent("canvas");
+}
+
+function downloadImage() {
+  saveCanvas("YourJewelryBox.jpg");
 }
 
 function draw() {
