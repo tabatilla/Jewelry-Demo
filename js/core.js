@@ -449,7 +449,9 @@ var canvasManager = (function(_callbackImpresion) {
     resize: function() {
       const variacion = 1;
       let cajasTemp = [];
-      let overLapp = [false, false, false, false]; // top, rigth, bottom, left
+      let cajasAux = [];
+      let overLapBorders = [false, false, false, false]; // top, rigth, bottom, left
+      let overLapAntesBorders = [false, false, false, false];
 
       //No se puede hacer resize cuando el tablero es menor de 10
       if (_alto < 10 || _ancho < 10) {
@@ -466,18 +468,35 @@ var canvasManager = (function(_callbackImpresion) {
       ); //Bottom
       cajasTemp.push(new Celda(0, 0, variacion, _alto, getColor())); // Left
 
+      // Para comprobar si solo hay una espacio vacío
+      cajasAux.push(new Celda(0, variacion, _ancho, variacion, getColor())); // Top
+      cajasAux.push(
+        new Celda(_ancho - variacion - 1, 0, variacion, _alto, getColor())
+      ); //Right
+      cajasAux.push(
+        new Celda(0, _alto - variacion - 1, _ancho, variacion, getColor())
+      ); //Bottom
+      cajasAux.push(new Celda(variacion, 0, variacion, _alto, getColor())); // Left
+
+      for (let i = 0; i < cajasAux.length; i++) {
+        for (let j = 0; j < espacios.length; j++) {
+          if (cajasAux[i].overlap(espacios[j])) {
+            overLapAntesBorders[i] = true;
+          }
+        }
+      }
+
       for (let i = 0; i < cajasTemp.length; i++) {
         for (let j = 0; j < espacios.length; j++) {
           if (cajasTemp[i].overlap(espacios[j])) {
-            overLapp[i] = true;
-            break;
+            overLapBorders[i] = true;
           }
         }
       }
 
       // Si el resize se tiene que hacer desde el top o left, todos los elementos deben moverse de
       // acuerdo a la variación (-1) dependiendo si es arriba o izquierda
-      if (!overLapp[0]) {
+      if (!overLapBorders[0] && overLapAntesBorders[0]) {
         // top
         for (let i = 0; i < espacios.length; i++) {
           espacios[i].y = espacios[i].y - variacion;
@@ -486,15 +505,15 @@ var canvasManager = (function(_callbackImpresion) {
         _alto = _alto - variacion;
       }
 
-      if (!overLapp[1]) {
+      if (!overLapBorders[1] && overLapAntesBorders[1]) {
         _ancho = _ancho - variacion; // right
       }
 
-      if (!overLapp[2]) {
+      if (!overLapBorders[2] && overLapAntesBorders[2]) {
         _alto = _alto - variacion; // bottom
       }
 
-      if (!overLapp[3]) {
+      if (!overLapBorders[3] && overLapAntesBorders[3]) {
         // left
         for (let i = 0; i < espacios.length; i++) {
           espacios[i].x = espacios[i].x - variacion;
