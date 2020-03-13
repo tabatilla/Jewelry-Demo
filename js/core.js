@@ -241,7 +241,7 @@ var canvasManager = (function(_callbackImpresion) {
           res += this.preciosBase[i].price;
         }
 
-        return `$${res}`;
+        return `$${this.redondear(res)}`;
       },
 
       redondear: function(amount) {
