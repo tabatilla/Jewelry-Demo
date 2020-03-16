@@ -189,6 +189,8 @@ var Celda = (function() {
 
 var canvasManager = (function(_callbackImpresion) {
   //Variables que almacenan lo que el usuario ha escogido en el primer formulario.
+  let _ancho_real = 0,
+    _alto_real = 0;
   let _ancho = 0,
     _alto = 0, //depth
     _height = 0;
@@ -419,9 +421,15 @@ var canvasManager = (function(_callbackImpresion) {
     },
 
     saveTamanio: function(tipo, value) {
-      if (tipo === "ancho") _ancho = parseInt(value);
+      if (tipo === "ancho") {
+        _ancho_real = parseInt(value);
+        _ancho = _ancho_real - 1;
+      }
       if (tipo === "ancho_f") _ancho_f = value;
-      if (tipo === "alto") _alto = parseInt(value);
+      if (tipo === "alto") {
+        _alto_real = parseInt(value);
+        _alto = _alto_real - 1;
+      }
       if (tipo === "alto_f") _alto_f = value;
       if (tipo === "height") _height = parseInt(value);
       if (tipo === "height_f") _height_f = value;
@@ -454,9 +462,9 @@ var canvasManager = (function(_callbackImpresion) {
       let overLapAntesBorders = [false, false, false, false];
 
       //No se puede hacer resize cuando el tablero es menor de 10
-      if (_alto < 10 || _ancho < 10) {
-        return;
-      }
+      // if (_alto < 10 || _ancho < 10) {
+      //   return;
+      // }
 
       // Se crean cajas en los bordes del tablero y se comprueba que no haya overlapping
       cajasTemp.push(new Celda(0, 0, _ancho, variacion, getColor())); // Top
